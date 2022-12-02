@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: create temporary directory
-        run: mkdir ~/tests
+        run: mkdir /tests
       - name: check directory created
         run: |
-          ls -alh tests
+          ls -alh /tests
   build:
     name: Build
     runs-on: ubuntu-latest
