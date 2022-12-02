@@ -70,6 +70,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             cd ${{ secrets.DIR_PATH }}
+            pwd
             CURRENT_PID=$(pgrep -f sooldama)
             if [ -z $CURRENT_PID ]
             then
