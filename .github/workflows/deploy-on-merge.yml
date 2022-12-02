@@ -84,7 +84,7 @@ jobs:
             nohup java -jar sooldama-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev \
             ${{ secrets.SERVER_MYSQL_URL }} ${{ secrets.SERVER_MYSQL_PORT }} \
             ${{ secrets.SERVER_MYSQL_DBNAME }} ${{ secrets.SERVER_MYSQL_PASSWORD }} \
-            ${{ secrets.SERVER_MYSQL_USERNAME }} &
+            ${{ secrets.SERVER_MYSQL_USERNAME }} > /dev/null 2> /dev/null < /dev/null &
             sleep 5
             CURRENT_PID=$(pgrep -f $APP_NAME)
             echo ">>>> New PID: $CURRENT_PID"
