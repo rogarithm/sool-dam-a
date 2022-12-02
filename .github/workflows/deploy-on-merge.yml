@@ -62,7 +62,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: setup environment variables
-        uses: appleboy/ssh-action@master
         run: echo "CURRENT_PID=$(pgrep -f sooldama)" >> $GITHUB_ENV
       - name: test pid variable
         run: echo $CURRENT_PID
