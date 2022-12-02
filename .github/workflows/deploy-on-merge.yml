@@ -70,11 +70,10 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             cd ${{ secrets.DIR_PATH }}
-            CURRENT_PID=$(pgrep -f sooldama)
-            if [ -z $CURRENT_PID ]; then
+            if [ -z $(pgrep -f sooldama) ]; then
               echo ">>>> java process not found."
             else
-              echo ">>>> PID: $CURRENT_PID kill."
+              echo ">>>> kill current pid."
               pkill -9 -ef sooldama
               sleep 15
             fi
@@ -85,5 +84,5 @@ jobs:
             ${{ secrets.SERVER_MYSQL_DBNAME }} ${{ secrets.SERVER_MYSQL_PASSWORD }} \
             ${{ secrets.SERVER_MYSQL_USERNAME }} > /dev/null 2> /dev/null < /dev/null &
             sleep 5
-            CURRENT_PID=$(pgrep -f $APP_NAME)
+            CURRENT_PID=$(pgrep -f sooldama-0.0.1-SNAPSHOT.jar)
             echo ">>>> New PID: $CURRENT_PID"
