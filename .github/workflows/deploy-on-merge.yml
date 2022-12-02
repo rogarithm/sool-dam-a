@@ -68,11 +68,15 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           password: ${{ secrets.PASSWORD }}
-          script: |
+          shell: bash
+          run: |
             cd ${{ secrets.DIR_PATH }}
             APP_NAME=sooldama
             PROFILE=dev
             CURRENT_PID=$(pgrep -f $APP_NAME)
+            echo "app name: " $APP_NAME
+            echo "PROFILE: " $PROFILE
+            echo "CURRENT PID: " $CURRENT_PID
             if [ -z $CURRENT_PID ]
             then
               echo ">>>> java process not found."
