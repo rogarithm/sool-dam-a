@@ -68,29 +68,29 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           password: ${{ secrets.PASSWORD }}
-          run: |
-            cd ${{ secrets.DIR_PATH }}
-            APP_NAME=sooldama
-            PROFILE=dev
-            CURRENT_PID=$(pgrep -f $APP_NAME)
-            echo "app name: " $APP_NAME
-            echo "PROFILE: " $PROFILE
-            echo "CURRENT PID: " $CURRENT_PID
-            if [ -z $CURRENT_PID ]
-            then
-              echo ">>>> java process not found."
-            else
-              echo ">>>> PID: $CURRENT_PID kill."
-              kill -15 $CURRENT_PID
-              sleep 15
-            fi
+        run: |
+          cd ${{ secrets.DIR_PATH }}
+          APP_NAME=sooldama
+          PROFILE=dev
+          CURRENT_PID=$(pgrep -f $APP_NAME)
+          echo "app name: " $APP_NAME
+          echo "PROFILE: " $PROFILE
+          echo "CURRENT PID: " $CURRENT_PID
+          if [ -z $CURRENT_PID ]
+          then
+            echo ">>>> java process not found."
+          else
+            echo ">>>> PID: $CURRENT_PID kill."
+            kill -15 $CURRENT_PID
+            sleep 15
+          fi
 
-            echo ">>>> $JAR_PATH java execute."
-            nohup java -jar sooldama-0.0.1-SNAPSHOT.jar --spring.profiles.active=$PROFILE \
-            ${{ secrets.SERVER_MYSQL_URL }} ${{ secrets.SERVER_MYSQL_PORT }} \
-            ${{ secrets.SERVER_MYSQL_DBNAME }} ${{ secrets.SERVER_MYSQL_PASSWORD }} \
-            ${{ secrets.SERVER_MYSQL_USERNAME }} &
-            sleep 5
-            CURRENT_PID=$(pgrep -f $APP_NAME)
-            echo ">>>> New PID: $CURRENT_PID"
-          shell: bash
+          echo ">>>> $JAR_PATH java execute."
+          nohup java -jar sooldama-0.0.1-SNAPSHOT.jar --spring.profiles.active=$PROFILE \
+          ${{ secrets.SERVER_MYSQL_URL }} ${{ secrets.SERVER_MYSQL_PORT }} \
+          ${{ secrets.SERVER_MYSQL_DBNAME }} ${{ secrets.SERVER_MYSQL_PASSWORD }} \
+          ${{ secrets.SERVER_MYSQL_USERNAME }} &
+          sleep 5
+          CURRENT_PID=$(pgrep -f $APP_NAME)
+          echo ">>>> New PID: $CURRENT_PID"
+        shell: bash
