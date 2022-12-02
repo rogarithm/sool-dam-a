@@ -72,8 +72,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           password: ${{ secrets.PASSWORD }}
-          env:
-            APP_NAME: sooldama
           script: |
             cd ${{ secrets.DIR_PATH }}
             if [ -z $CURRENT_PID ]; then
