@@ -1,7 +1,6 @@
 name: scp files
-on: [push]
-jobs:
-  ## 1. 빌드
+on: [ push ]
+jobs: ## 1. 빌드
   build:
     runs-on: ubuntu-latest
     ## 형상 다운로드
@@ -12,26 +11,25 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-    ## 빌드
+      ## 빌드
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew clean build
-    ## 빌드 아티팩트 확인
-     - name: check artifact file
-       run: ls -ahl ./build/libs/*.jar
-    ## 빌드 아티팩트 업로드
-    - name: upload build artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: project_artifact
-        path: "./build/libs/*.jar"
+      ## 빌드 아티팩트 확인
+      - name: check artifact file
+        run: ls -ahl ./build/libs/*.jar
+      ## 빌드 아티팩트 업로드
+      - name: upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: project_artifact
+          path: "./build/libs/*.jar"
   ## 2. 배포
   distribute:
     needs: [ build ]
     runs-on: ubuntu-latest
-    steps:
-      ## 아티팩트 전송을 위한 임시 디렉토리
+    steps: ## 아티팩트 전송을 위한 임시 디렉토리
       - name: create temporary directory
         run: mkdir ~/distribute
       ## 빌드한 아티팩트 다운로드
