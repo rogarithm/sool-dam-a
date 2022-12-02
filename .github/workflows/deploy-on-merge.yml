@@ -68,7 +68,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           password: ${{ secrets.PASSWORD }}
-          shell: bash
           run: |
             cd ${{ secrets.DIR_PATH }}
             APP_NAME=sooldama
@@ -94,3 +93,4 @@ jobs:
             sleep 5
             CURRENT_PID=$(pgrep -f $APP_NAME)
             echo ">>>> New PID: $CURRENT_PID"
+          shell: bash
