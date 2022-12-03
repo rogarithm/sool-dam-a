@@ -66,14 +66,13 @@ jobs:
       - name: test pid variable
         run: echo $CURRENT_PID
       - name: stop service if needed
-        uses: actions/checkout@v3
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            cd .github/workflows
             sh stop_if_running.sh
       # - name: restart service
       #   uses: appleboy/ssh-action@master
