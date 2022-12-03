@@ -65,7 +65,17 @@ jobs:
         run: echo "CURRENT_PID=$(pgrep -f sooldama)" >> $GITHUB_ENV
       - name: test pid variable
         run: echo $CURRENT_PID
-      - name: stop (if needed) and restart service
+      - name: stop service if needed
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd .github/workflows
+            sh stop_if_running.sh
+      - name: restart service
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -74,20 +84,9 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             cd ${{ secrets.DIR_PATH }}
-            if [ -z $CURRENT_PID ]; then
-              echo ">>>> java process not found."
-            else
-              echo ">>>> kill current pid $CURRENT_PID."
-              kill -15 $CURRENT_PID
-              sleep 15
-            fi
-
             echo ">>>> $JAR_PATH java execute."
             nohup java -jar sooldama-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev \
             ${{ secrets.SERVER_MYSQL_URL }} ${{ secrets.SERVER_MYSQL_PORT }} \
             ${{ secrets.SERVER_MYSQL_DBNAME }} ${{ secrets.SERVER_MYSQL_PASSWORD }} \
             ${{ secrets.SERVER_MYSQL_USERNAME }} > /dev/null 2> /dev/null < /dev/null &
             sleep 5
-            # CURRENT_PID=$(pgrep -f sooldama-0.0.1-SNAPSHOT.jar)
-            # echo ">>>> New PID: $CURRENT_PID" 
-            # echo
