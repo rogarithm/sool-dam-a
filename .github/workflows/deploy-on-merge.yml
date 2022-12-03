@@ -66,7 +66,7 @@ jobs:
       - name: test pid variable
         run: echo $CURRENT_PID
       - name: stop service if needed
-        uses: appleboy/ssh-action@master
+        uses: actions/checkout@v3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
