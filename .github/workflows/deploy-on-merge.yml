@@ -70,15 +70,16 @@ jobs:
   service_restart: # needs: [ build, distribute ]
     runs-on: ubuntu-latest
     steps:
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        port: ${{ secrets.PORT }}
-        password: ${{ secrets.PASSWORD }}
-        script: |
-          cd ${{ secrets.DIR_PATH }}
-          sh stop_if_running.sh
+      - name: stop if running
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd ${{ secrets.DIR_PATH }}
+            sh stop_if_running.sh
       # - name: restart service
       #   uses: appleboy/ssh-action@master
       #   with:
