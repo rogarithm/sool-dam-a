@@ -49,10 +49,9 @@ jobs:
       - name: transfer artifact and script via ssh password
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: "${{ secrets.HOST }}:${{ secrets.PORT }}, ${{ secrets.HOST }}:${{ secrets.PORT2 }}"
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}, ${{ secrets.PORT2 }}
           rm: true
           source: "distribute/*.jar, distribute/*.sh"
           target: ${{ secrets.DIR_PATH }}
@@ -61,9 +60,8 @@ jobs:
       - name: Show structure of transfer files
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: "${{ secrets.HOST }}:${{ secrets.PORT }}, ${{ secrets.HOST }}:${{ secrets.PORT2 }}"
           username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}, ${{ secrets.PORT2 }}
           password: ${{ secrets.PASSWORD }}
           script: |
             cd ${{ secrets.DIR_PATH }}
@@ -75,9 +73,8 @@ jobs:
       - name: stop if running
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: "${{ secrets.HOST }}:${{ secrets.PORT }}, ${{ secrets.HOST }}:${{ secrets.PORT2 }}"
           username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}, ${{ secrets.PORT2 }}
           password: ${{ secrets.PASSWORD }}
           script: |
             cd ${{ secrets.DIR_PATH }}
@@ -85,9 +82,8 @@ jobs:
       - name: restart service
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: "${{ secrets.HOST }}:${{ secrets.PORT }}, ${{ secrets.HOST }}:${{ secrets.PORT2 }}"
           username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}, ${{ secrets.PORT2 }}
           password: ${{ secrets.PASSWORD }}
           script: |
             cd ${{ secrets.DIR_PATH }}
