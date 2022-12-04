@@ -85,6 +85,7 @@ jobs:
           port: ${{ secrets.PORT2 }}
           password: ${{ secrets.PASSWORD }}
           script: |
+            source ~/.bash_profile
             cd ${{ secrets.DIR_PATH }}
             echo ">>>> java execute."
             java -jar sooldama-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev \
