@@ -70,7 +70,7 @@ jobs:
   #        target: ${{ secrets.DIR_PATH }}
   #        # 작업에 사용한 distrubute 디렉토리를 경로에서 제거
   #        strip_components: 1
-  service_restart_server:
+  stop_if_running:
     #needs: [ build, distribute ]
     runs-on: ubuntu-latest
     steps:
@@ -83,9 +83,13 @@ jobs:
           script: |
             cd ${{ secrets.DIR_PATH }}
             sh stop_if_running.sh
+  service_restart_server1:
+    needs: [ stop_if_running ]
+    runs-on: ubuntu-latest
+    concurrency: restart
+    steps:
       - name: restart service in server 1
         uses: appleboy/ssh-action@master
-        concurrency: restart
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
@@ -99,9 +103,13 @@ jobs:
             ${{ secrets.SERVER_MYSQL_DBNAME }} ${{ secrets.SERVER_MYSQL_PASSWORD }} \
             ${{ secrets.SERVER_MYSQL_USERNAME }} > /dev/null 2> /dev/null < /dev/null &
             sleep 5
+  service_restart_server2:
+    needs: [ stop_if_running ]
+    runs-on: ubuntu-latest
+    concurrency: restart
+    steps:
       - name: restart service in server 2
         uses: appleboy/ssh-action@master
-        concurrency: restart
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
