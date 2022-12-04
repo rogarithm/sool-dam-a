@@ -83,11 +83,29 @@ jobs:
           script: |
             cd ${{ secrets.DIR_PATH }}
             sh stop_if_running.sh
-      - name: restart service
+      - name: restart service in server 1
         uses: appleboy/ssh-action@master
+        concurrency: restart
         with:
-          host: ${{ secrets.HOSTS }}
+          host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd ${{ secrets.DIR_PATH }}
+            echo ">>>> $JAR_PATH java execute."
+            nohup java -jar sooldama-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev \
+            ${{ secrets.SERVER_MYSQL_URL }} ${{ secrets.SERVER_MYSQL_PORT }} \
+            ${{ secrets.SERVER_MYSQL_DBNAME }} ${{ secrets.SERVER_MYSQL_PASSWORD }} \
+            ${{ secrets.SERVER_MYSQL_USERNAME }} > /dev/null 2> /dev/null < /dev/null &
+            sleep 5
+      - name: restart service in server 2
+        uses: appleboy/ssh-action@master
+        concurrency: restart
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT2 }}
           password: ${{ secrets.PASSWORD }}
           script: |
             cd ${{ secrets.DIR_PATH }}
