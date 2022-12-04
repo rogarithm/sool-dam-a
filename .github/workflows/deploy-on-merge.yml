@@ -69,7 +69,7 @@ jobs:
   #          cd ${{ secrets.DIR_PATH }}
   #          ls -alh
   service_restart:
-    needs: [ build, distribute ]
+    #needs: [ build, distribute ]
     runs-on: ubuntu-latest
     steps:
       - name: stop if running
