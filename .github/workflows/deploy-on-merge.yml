@@ -84,16 +84,6 @@ jobs:
           script: |
             cd ${{ secrets.DIR_PATH }}
             sh stop_if_running.sh
-      - name: stop if running in server2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT2 }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            cd ${{ secrets.DIR_PATH }}
-            sh stop_if_running.sh
       - name: restart service in server1
         uses: appleboy/ssh-action@master
         with:
@@ -109,6 +99,16 @@ jobs:
             ${{ secrets.SERVER_MYSQL_DBNAME }} ${{ secrets.SERVER_MYSQL_PASSWORD }} \
             ${{ secrets.SERVER_MYSQL_USERNAME }} > /dev/null 2> /dev/null < /dev/null &
             sleep 5
+      - name: stop if running in server2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT2 }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd ${{ secrets.DIR_PATH }}
+            sh stop_if_running.sh
       - name: restart service in server2
         uses: appleboy/ssh-action@master
         with:
