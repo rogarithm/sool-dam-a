@@ -46,13 +46,13 @@ jobs:
       - name: check artifact and script downloaded
         run: |
           ls -alh distribute
-      - name: transfer artifact and script to server1
+      - name: transfer artifact and script to server2
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
+          port: ${{ secrets.PORT2 }}
           rm: true
           source: "distribute/*.jar, distribute/*.sh"
           target: ${{ secrets.DIR_PATH }}
@@ -68,21 +68,21 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
+          port: ${{ secrets.PORT2 }}
           script: |
             cd ${{ secrets.DIR_PATH }}
             sh stop_if_running.sh
-  service_restart_server1:
+  service_restart_server2:
     needs: [ stop_if_running ]
     runs-on: ubuntu-latest
     concurrency: restart
     steps:
-      - name: restart service in server 1
+      - name: restart service in server 2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
+          port: ${{ secrets.PORT2 }}
           password: ${{ secrets.PASSWORD }}
           script: |
             cd ${{ secrets.DIR_PATH }}
