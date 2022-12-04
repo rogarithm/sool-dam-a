@@ -1,77 +1,77 @@
 name: scp files
 on: [ push ]
 jobs:
-  #build:
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - uses: actions/checkout@v3
-  #    - name: Set up JDK 17
-  #      uses: actions/setup-java@v3
-  #      with:
-  #        java-version: '17'
-  #        distribution: 'temurin'
-  #        cache: gradle
-  #    - name: Grant execute permission for gradlew
-  #      run: chmod +x gradlew
-  #    - name: Build with Gradle
-  #      run: ./gradlew clean build
-  #    - name: check artifact file
-  #      run: ls -ahl ./build/libs/*.jar
-  #    - name: upload build artifact
-  #      uses: actions/upload-artifact@v3
-  #      with:
-  #        name: project_artifact
-  #        path: "./build/libs/*.jar"
-  #    - name: upload deploy script
-  #      uses: actions/upload-artifact@v3
-  #      with:
-  #        name: project_deploy_script
-  #        path: "./.github/workflows/*.sh"
-  #distribute:
-  #  needs: [ build ]
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - name: create temporary directory
-  #      run: mkdir ~/distribute
-  #    - name: download deploy script
-  #      uses: actions/download-artifact@v3
-  #      with:
-  #        name: project_deploy_script
-  #        path: distribute
-  #    - name: download build artifact
-  #      uses: actions/download-artifact@v3
-  #      with:
-  #        name: project_artifact
-  #        path: distribute
-  #    - name: check artifact and script downloaded
-  #      run: |
-  #        ls -alh distribute
-  #    - name: transfer artifact and script to server1
-  #      uses: appleboy/scp-action@master
-  #      with:
-  #        host: ${{ secrets.HOST }}
-  #        username: ${{ secrets.USERNAME }}
-  #        password: ${{ secrets.PASSWORD }}
-  #        port: ${{ secrets.PORT }}
-  #        rm: true
-  #        source: "distribute/*.jar, distribute/*.sh"
-  #        target: ${{ secrets.DIR_PATH }}
-  #        # 작업에 사용한 distrubute 디렉토리를 경로에서 제거
-  #        strip_components: 1
-  #    - name: transfer artifact and script to server2
-  #      uses: appleboy/scp-action@master
-  #      with:
-  #        host: ${{ secrets.HOST }}
-  #        username: ${{ secrets.USERNAME }}
-  #        password: ${{ secrets.PASSWORD }}
-  #        port: ${{ secrets.PORT2 }}
-  #        rm: true
-  #        source: "distribute/*.jar, distribute/*.sh"
-  #        target: ${{ secrets.DIR_PATH }}
-  #        # 작업에 사용한 distrubute 디렉토리를 경로에서 제거
-  #        strip_components: 1
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew clean build
+      - name: check artifact file
+        run: ls -ahl ./build/libs/*.jar
+      - name: upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: project_artifact
+          path: "./build/libs/*.jar"
+      - name: upload deploy script
+        uses: actions/upload-artifact@v3
+        with:
+          name: project_deploy_script
+          path: "./.github/workflows/*.sh"
+  distribute:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: create temporary directory
+        run: mkdir ~/distribute
+      - name: download deploy script
+        uses: actions/download-artifact@v3
+        with:
+          name: project_deploy_script
+          path: distribute
+      - name: download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: project_artifact
+          path: distribute
+      - name: check artifact and script downloaded
+        run: |
+          ls -alh distribute
+      - name: transfer artifact and script to server1
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          rm: true
+          source: "distribute/*.jar, distribute/*.sh"
+          target: ${{ secrets.DIR_PATH }}
+          # 작업에 사용한 distrubute 디렉토리를 경로에서 제거
+          strip_components: 1
+      - name: transfer artifact and script to server2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT2 }}
+          rm: true
+          source: "distribute/*.jar, distribute/*.sh"
+          target: ${{ secrets.DIR_PATH }}
+          # 작업에 사용한 distrubute 디렉토리를 경로에서 제거
+          strip_components: 1
   stop_if_running:
-    #needs: [ build, distribute ]
+    needs: [ build, distribute ]
     runs-on: ubuntu-latest
     steps:
       - name: stop if running
