@@ -52,7 +52,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT1 }}
+          port: ${{ secrets.PORT }}
           rm: true
           source: "distribute/*.jar, distribute/*.sh"
           target: ${{ secrets.DIR_PATH }}
