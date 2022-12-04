@@ -118,8 +118,8 @@ jobs:
           script: |
             cd ${{ secrets.DIR_PATH }}
             echo ">>>> java execute."
-            nohup java -jar sooldama-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev \
+            java -jar sooldama-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev \
             --SERVER_MYSQL_URL=${{ secrets.SERVER_MYSQL_URL }} --SERVER_MYSQL_PORT=${{ secrets.SERVER_MYSQL_PORT }} \
             --SERVER_MYSQL_DBNAME=${{ secrets.SERVER_MYSQL_DBNAME }} --SERVER_MYSQL_USERNAME=${{ secrets.SERVER_MYSQL_USERNAME }} \
-            --SERVER_MYSQL_PASSWORD=${{ secrets.SERVER_MYSQL_PASSWORD }} &
+            --SERVER_MYSQL_PASSWORD=${{ secrets.SERVER_MYSQL_PASSWORD }}
             sleep 5
