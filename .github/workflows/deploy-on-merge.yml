@@ -75,7 +75,7 @@ jobs:
       - name: stop if running
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}:${{ secrets.PORT }}
+          host: ${{ secrets.HOST }}:${{ secrets.PORT }}, ${{ secrets.HOST }}:${{ secrets.PORT2 }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
@@ -84,7 +84,7 @@ jobs:
       - name: restart service
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}:${{ secrets.PORT }}
+          host: ${{ secrets.HOST }}:${{ secrets.PORT }}, ${{ secrets.HOST }}:${{ secrets.PORT2 }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
