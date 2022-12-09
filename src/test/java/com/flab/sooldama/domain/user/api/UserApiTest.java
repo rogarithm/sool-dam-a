@@ -65,21 +65,10 @@ public class UserApiTest {
 	@Autowired
 	private Validator validator;
 
-	private JoinUserRequest joinSuccessRequest;
-
 	private JoinUserRequest request;
 
 	@BeforeEach
 	public void setUp() {
-		this.joinSuccessRequest = JoinUserRequest.builder()
-			.email("younghee@fmail.com")
-			.password("1q2w3e4r!")
-			.name("younghee lee")
-			.phoneNumber("010-0101-0101")
-			.nickname("yh")
-			.isAdult(true)
-			.build();
-
 		this.request = JoinUserRequest.builder()
 			.email("sehoon@fmail.com")
 			.password("abracadabra")
@@ -95,7 +84,7 @@ public class UserApiTest {
 	public void joinSuccessTest() throws Exception {
 		//Given 서비스를 거친 결과값
 		String content = objectMapper.writeValueAsString(
-			this.joinSuccessRequest);
+			this.request);
 
 		//Then 회원가입 api에 content를 넣고 호출했을 때
 		mockMvc.perform(post("/users")
@@ -112,8 +101,8 @@ public class UserApiTest {
 		//Given 서비스를 거친 결과값
 		String content = objectMapper.writeValueAsString(
 			JoinUserRequest.builder()
-				.password(this.joinSuccessRequest.getPassword())
-				.name(this.joinSuccessRequest.getName())
+				.password(this.request.getPassword())
+				.name(this.request.getName())
 				.build());
 
 		//Then 회원가입 api에 content를 넣고 호출했을 때
@@ -240,8 +229,8 @@ public class UserApiTest {
 	public void loginSuccess() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		LoginUserRequest validRequest = LoginUserRequest.builder()
-			.email("joined@fmail.com")
-			.password("q1w2e3!")
+			.email(this.request.getEmail())
+			.password(this.request.getPassword())
 			.build();
 
 		String content = objectMapper.writeValueAsString(validRequest);
@@ -295,8 +284,8 @@ public class UserApiTest {
 	public void logoutSuccess() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		LoginUserRequest validRequest = LoginUserRequest.builder()
-			.email("joined@fmail.com")
-			.password("q1w2e3!")
+			.email(this.request.getEmail())
+			.password(this.request.getPassword())
 			.build();
 
 		MockHttpSession session = new MockHttpSession();
