@@ -24,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -64,19 +65,37 @@ public class UserApiTest {
 	@Autowired
 	Validator validator;
 
+	private JoinUserRequest joinSuccessRequest;
+
+	private JoinUserRequest request;
+
+	@BeforeEach
+	public void setUp() {
+		this.joinSuccessRequest = JoinUserRequest.builder()
+			.email("younghee@fmail.com")
+			.password("1q2w3e4r!")
+			.name("younghee lee")
+			.phoneNumber("010-0101-0101")
+			.nickname("yh")
+			.isAdult(true)
+			.build();
+
+		this.request = JoinUserRequest.builder()
+			.email("sehoon@fmail.com")
+			.password("abracadabra")
+			.name("sehoon gim")
+			.phoneNumber("010-1010-1010")
+			.nickname("sesoon")
+			.isAdult(true)
+			.build();
+	}
+
 	@Test
 	@DisplayName("회원가입 성공 테스트")
 	public void joinSuccessTest() throws Exception {
 		//Given 서비스를 거친 결과값
 		String content = objectMapper.writeValueAsString(
-			JoinUserRequest.builder()
-				.email("younghee@fmail.com")
-				.password("1q2w3e4r!")
-				.name("younghee lee")
-				.phoneNumber("010-0101-0101")
-				.nickname("yh")
-				.isAdult(true)
-				.build());
+			this.joinSuccessRequest);
 
 		//Then 회원가입 api에 content를 넣고 호출했을 때
 		mockMvc.perform(post("/users")
@@ -93,8 +112,8 @@ public class UserApiTest {
 		//Given 서비스를 거친 결과값
 		String content = objectMapper.writeValueAsString(
 			JoinUserRequest.builder()
-				.password("1q2w3e4r!")
-				.name("younghee lee")
+				.password(this.joinSuccessRequest.getPassword())
+				.name(this.joinSuccessRequest.getName())
 				.build());
 
 		//Then 회원가입 api에 content를 넣고 호출했을 때
@@ -109,16 +128,7 @@ public class UserApiTest {
 	@DisplayName("회원가입 중 이메일 중복 예외 발생시 Controller Advice가 처리")
 	public void duplicatedEmailExceptionHandledByControllerAdviceTest() throws Exception {
 		// 테스트 데이터 및 동작 정의
-		JoinUserRequest request = JoinUserRequest.builder()
-			.email("sehoon@fmail.com")
-			.password("abracadabra")
-			.name("sehoon gim")
-			.phoneNumber("010-1010-1010")
-			.nickname("sesoon")
-			.isAdult(true)
-			.build();
-
-		String content = objectMapper.writeValueAsString(request);
+		String content = objectMapper.writeValueAsString(this.request);
 
 		when(userService.insertUser(any(JoinUserRequest.class))).thenThrow(
 			DuplicateEmailExistsException.class);
@@ -143,11 +153,11 @@ public class UserApiTest {
 
 		JoinUserRequest request = JoinUserRequest.builder()
 			.email(invalidEmail)
-			.password("abracadabra")
-			.name("sehoon gim")
-			.phoneNumber("010-1010-1010")
-			.nickname("sesoon")
-			.isAdult(true)
+			.password(this.request.getPassword())
+			.name(this.request.getName())
+			.phoneNumber(this.request.getPhoneNumber())
+			.nickname(this.request.getNickname())
+			.isAdult(this.request.getIsAdult())
 			.build();
 
 		Set<ConstraintViolation<JoinUserRequest>> validate = validator.validate(request);
