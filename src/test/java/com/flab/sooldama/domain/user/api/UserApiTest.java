@@ -162,9 +162,11 @@ public class UserApiTest {
 	@DisplayName("회원가입되지 않은 이메일로 로그인 시 로그인 실패")
 	public void loginFailEmailNotFound() throws Exception {
 		// 테스트 데이터 및 동작 정의
+		String yetJoinedUserEmail = "yet-joined@fmail.com";
+
 		LoginUserRequest invalidRequest = LoginUserRequest.builder()
-			.email("yet-joined@fmail.com")
-			.password("q1w2e3!")
+			.email(yetJoinedUserEmail)
+			.password(this.request.getPassword())
 			.build();
 
 		String content = objectMapper.writeValueAsString(invalidRequest);
@@ -195,9 +197,11 @@ public class UserApiTest {
 	@DisplayName("등록된 사용자이더라도 비밀번호 틀리면 로그인 불가")
 	public void loginFailPasswordNotMatch() throws Exception {
 		// 테스트 데이터 및 동작 정의
+		String wrongPassword = "q1w2e3!";
+
 		LoginUserRequest invalidRequest = LoginUserRequest.builder()
-			.email("joined@fmail.com")
-			.password("q1w2e3!")
+			.email(this.request.getEmail())
+			.password(wrongPassword)
 			.build();
 
 		String content = objectMapper.writeValueAsString(invalidRequest);
