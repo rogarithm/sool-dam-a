@@ -51,7 +51,7 @@ import org.springframework.test.web.servlet.MockMvc;
 public class UserApiTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	private MockMvc mockMvc;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -63,7 +63,7 @@ public class UserApiTest {
 	private UserService userService;
 
 	@Autowired
-	Validator validator;
+	private Validator validator;
 
 	private JoinUserRequest joinSuccessRequest;
 
