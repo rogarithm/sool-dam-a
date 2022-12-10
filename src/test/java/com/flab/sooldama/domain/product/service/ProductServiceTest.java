@@ -38,16 +38,21 @@ public class ProductServiceTest {
 	@Mock
 	private ProductMapper productMapper;
 
+	private static final Integer DEFAULT_OFFSET = 0;
+
+	private static final Integer DEFAULT_LIMIT = 20;
+
+	private static final Long DEFAULT_CATEGORY_ID = null;
+
 	@Test
 	@DisplayName("제품이 존재할 때 전체 제품 조회 성공 테스트 - offeet, limit에 알맞는 리스트를 반환")
 	public void getProductsTest() {
 
 		// given
-		int offset = 0;
 		int limit = 5;
 
 		List<Product> products = new ArrayList<>();
-		for (int i = offset; i < limit; i++) {
+		for (int i = DEFAULT_OFFSET; i < limit; i++) {
 			products.add(
 				Product.builder()
 					.productCategoryId(1L)
@@ -60,14 +65,14 @@ public class ProductServiceTest {
 					.build());
 		}
 
-		when(productMapper.selectProducts(offset, limit, null)).thenReturn(products);
+		when(productMapper.selectProducts(DEFAULT_OFFSET, limit, DEFAULT_CATEGORY_ID)).thenReturn(products);
 
 		// when
-		List<ProductResponse> productsResponse = productService.getProducts(offset, limit, null);
+		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, limit, DEFAULT_CATEGORY_ID);
 
 		// then
-		verify(productMapper).selectProducts(offset, limit, null);
-		assertEquals(limit - offset, productsResponse.size());
+		verify(productMapper).selectProducts(DEFAULT_OFFSET, limit, DEFAULT_CATEGORY_ID);
+		assertEquals(limit - DEFAULT_OFFSET, productsResponse.size());
 		assertFalse(productsResponse.isEmpty());
 	}
 
@@ -76,17 +81,16 @@ public class ProductServiceTest {
 	public void getProductsEmptyTest() {
 
 		// given
-		int offset = 0;
 		int limit = 5;
 
 		List<Product> products = new ArrayList<>();
-		when(productMapper.selectProducts(offset, limit, null)).thenReturn(products);
+		when(productMapper.selectProducts(DEFAULT_OFFSET, limit, DEFAULT_CATEGORY_ID)).thenReturn(products);
 
 		// when
-		List<ProductResponse> productsResponse = productService.getProducts(offset, limit, null);
+		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, limit, DEFAULT_CATEGORY_ID);
 
 		// then
-		verify(productMapper).selectProducts(offset, limit, null);
+		verify(productMapper).selectProducts(DEFAULT_OFFSET, limit, DEFAULT_CATEGORY_ID);
 		assertTrue(productsResponse.isEmpty());
 	}
 
@@ -95,12 +99,11 @@ public class ProductServiceTest {
 	public void getProductsByCategoryIdTest() {
 
 		// given
-		int offset = 0;
 		int limit = 5;
 		long categoryId = 1L;
 
 		List<Product> products = new ArrayList<>();
-		for (int i = offset; i < limit; i++) {
+		for (int i = DEFAULT_OFFSET; i < limit; i++) {
 			products.add(
 				Product.builder()
 					.productCategoryId(categoryId)
@@ -113,16 +116,16 @@ public class ProductServiceTest {
 					.build());
 		}
 
-		when(productMapper.selectProducts(offset, limit, categoryId))
+		when(productMapper.selectProducts(DEFAULT_OFFSET, limit, categoryId))
 			.thenReturn(products);
 
 		// when
 		List<ProductResponse> productsResponse =
-			productService.getProducts(offset, limit, categoryId);
+			productService.getProducts(DEFAULT_OFFSET, limit, categoryId);
 
 		// then
-		verify(productMapper).selectProducts(offset, limit, categoryId);
-		assertEquals(limit - offset, productsResponse.size());
+		verify(productMapper).selectProducts(DEFAULT_OFFSET, limit, categoryId);
+		assertEquals(limit - DEFAULT_OFFSET, productsResponse.size());
 		assertFalse(productsResponse.isEmpty());
 
 		for (Product product : products) {
@@ -135,19 +138,18 @@ public class ProductServiceTest {
 	public void getProductsByCategoryIdEmptyTest() {
 
 		// given
-		int offset = 0;
 		int limit = 5;
 		long categoryId = 1L;
 
 		List<Product> products = new ArrayList<>();
-		when(productMapper.selectProducts(offset, limit, categoryId)).thenReturn(products);
+		when(productMapper.selectProducts(DEFAULT_OFFSET, limit, categoryId)).thenReturn(products);
 
 		// when
 		List<ProductResponse> productsResponse =
-			productService.getProducts(offset, limit, categoryId);
+			productService.getProducts(DEFAULT_OFFSET, limit, categoryId);
 
 		// then
-		verify(productMapper).selectProducts(offset, limit, categoryId);
+		verify(productMapper).selectProducts(DEFAULT_OFFSET, limit, categoryId);
 		assertTrue(productsResponse.isEmpty());
 	}
 
