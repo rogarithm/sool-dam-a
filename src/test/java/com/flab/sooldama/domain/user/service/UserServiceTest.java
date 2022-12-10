@@ -274,7 +274,8 @@ class UserServiceTest {
 		when(userMapper.findUserByEmail(any(String.class))).thenReturn(Optional.of(validUser));
 
 		// 실행 및 행위 검증
-		Assertions.assertThrows(UserAlreadyLoggedinException.class, () -> userService.loginUser(validRequest, session));
+		Assertions.assertThrows(UserAlreadyLoggedinException.class,
+			() -> userService.loginUser(validRequest, session));
 		verify(userMapper).findUserByEmail(any(String.class));
 	}
 
