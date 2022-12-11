@@ -94,7 +94,7 @@ public class ProductApiTest {
 	@DisplayName("한 번에 여러 제품 조회 시 기본값 적용")
 	public void getProductsTest() throws Exception {
 		// 테스트 데이터 및 동작 정의
-		when(productService.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID, session))
+		when(productService.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID, this.session))
 			.thenReturn(this.products);
 
 		// 실행
@@ -102,13 +102,13 @@ public class ProductApiTest {
 			.perform(get("/products")
 				.param("offset", DEFAULT_OFFSET.toString())
 				.param("limit", DEFAULT_LIMIT.toString())
-				.session(session))
+				.session(this.session))
 			.andDo(print())
 			.andExpect(status().isOk());
 
 		// 행위 검증
 		verify(productService, times(1))
-			.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID, session);
+			.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID, this.session);
 	}
 
 	@Test
@@ -122,7 +122,7 @@ public class ProductApiTest {
 			.perform(get("/products")
 				.param("offset", INVALID_OFFSET.toString())
 				.param("limit", DEFAULT_LIMIT.toString())
-				.session(session))
+				.session(this.session))
 			.andDo(print())
 			.andExpect(status().isBadRequest());
 	}
