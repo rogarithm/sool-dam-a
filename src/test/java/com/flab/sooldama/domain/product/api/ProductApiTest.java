@@ -37,11 +37,17 @@ public class ProductApiTest {
 
 	private List<ProductResponse> products;
 
+	private MockHttpSession session;
+
 	private static final Integer DEFAULT_OFFSET = 0;
 
 	private static final Integer DEFAULT_LIMIT = 20;
 
 	private static final Long DEFAULT_CATEGORY_ID = null;
+
+	private static final String SESSION_KEY = "USER_EMAIL";
+
+	private static final String SESSION_VALUE = "test@tester.com";
 
 	@BeforeEach
 	public void setUp() {
@@ -79,15 +85,15 @@ public class ProductApiTest {
 		products.add(product1);
 		products.add(product2);
 		products.add(product3);
+
+		this.session = new MockHttpSession();
+		this.session.setAttribute(SESSION_KEY, SESSION_VALUE);
 	}
 
 	@Test
 	@DisplayName("한 번에 여러 제품 조회 시 기본값 적용")
 	public void getProductsTest() throws Exception {
 		// 테스트 데이터 및 동작 정의
-		final MockHttpSession session = new MockHttpSession();
-		session.setAttribute("USER_EMAIL", "test@tester.com");
-
 		when(productService.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID, session))
 			.thenReturn(this.products);
 
@@ -109,9 +115,6 @@ public class ProductApiTest {
 	@DisplayName("offset이 0보다 작으면 유효성 검증 실패해서 service로 요청 전달 X")
 	public void getProductsFailTest() throws Exception {
 		// 테스트 데이터 및 동작 정의
-		final MockHttpSession session = new MockHttpSession();
-		session.setAttribute("USER_EMAIL", "test@tester.com");
-
 		Integer INVALID_OFFSET = -1;
 
 		// 실행

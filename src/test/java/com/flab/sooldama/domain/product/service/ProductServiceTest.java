@@ -15,6 +15,8 @@ import com.flab.sooldama.domain.product.exception.ProductNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +41,8 @@ public class ProductServiceTest {
 	@Mock
 	private ProductMapper productMapper;
 
+	private MockHttpSession session;
+
 	private static final Integer DEFAULT_OFFSET = 0;
 
 	private static final Integer LIMIT = 5;
@@ -53,14 +57,17 @@ public class ProductServiceTest {
 
 	private static final String SESSION_VALUE = "test@tester.com";
 
+	@BeforeEach
+	public void setUp() {
+		this.session = new MockHttpSession();
+		this.session.setAttribute(SESSION_KEY, SESSION_VALUE);
+	}
+
 	@Test
 	@DisplayName("제품이 존재할 때 전체 제품 조회 성공 테스트 - offeet, limit에 알맞는 리스트를 반환")
 	public void getProductsTest() {
 
 		// given
-		final MockHttpSession session = new MockHttpSession();
-		session.setAttribute(SESSION_KEY, SESSION_VALUE);
-
 		List<Product> products = new ArrayList<>();
 		for (int i = DEFAULT_OFFSET; i < LIMIT; i++) {
 			products.add(
@@ -91,9 +98,6 @@ public class ProductServiceTest {
 	public void getProductsEmptyTest() {
 
 		// given
-		final MockHttpSession session = new MockHttpSession();
-		session.setAttribute(SESSION_KEY, SESSION_VALUE);
-
 		List<Product> products = new ArrayList<>();
 		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID)).thenReturn(products);
 
@@ -110,9 +114,6 @@ public class ProductServiceTest {
 	public void getProductsByCategoryIdTest() {
 
 		// given
-		final MockHttpSession session = new MockHttpSession();
-		session.setAttribute(SESSION_KEY, SESSION_VALUE);
-
 		List<Product> products = new ArrayList<>();
 		for (int i = DEFAULT_OFFSET; i < LIMIT; i++) {
 			products.add(
@@ -149,9 +150,6 @@ public class ProductServiceTest {
 	public void getProductsByCategoryIdEmptyTest() {
 
 		// given
-		final MockHttpSession session = new MockHttpSession();
-		session.setAttribute(SESSION_KEY, SESSION_VALUE);
-
 		List<Product> products = new ArrayList<>();
 		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID)).thenReturn(products);
 
