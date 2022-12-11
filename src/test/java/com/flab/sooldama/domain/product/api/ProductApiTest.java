@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = ProductApi.class)
@@ -84,30 +85,41 @@ public class ProductApiTest {
 	@DisplayName("한 번에 여러 제품 조회 시 기본값 적용")
 	public void getProductsTest() throws Exception {
 		// 테스트 데이터 및 동작 정의
-		when(productService.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID))
+		final MockHttpSession session = new MockHttpSession();
+		session.setAttribute("USER_EMAIL", "test@tester.com");
+
+		when(productService.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID, session))
 			.thenReturn(this.products);
 
 		// 실행
 		this.mockMvc
 			.perform(get("/products")
 				.param("offset", DEFAULT_OFFSET.toString())
-				.param("limit", DEFAULT_LIMIT.toString()))
+				.param("limit", DEFAULT_LIMIT.toString())
+				.session(session))
+			.andDo(print())
 			.andExpect(status().isOk());
 
 		// 행위 검증
 		verify(productService, times(1))
-			.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID);
+			.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID, session);
 	}
 
 	@Test
 	@DisplayName("offset이 0보다 작으면 유효성 검증 실패해서 service로 요청 전달 X")
 	public void getProductsFailTest() throws Exception {
+		// 테스트 데이터 및 동작 정의
+		final MockHttpSession session = new MockHttpSession();
+		session.setAttribute("USER_EMAIL", "test@tester.com");
+
 		Integer INVALID_OFFSET = -1;
 
+		// 실행
 		this.mockMvc
 			.perform(get("/products")
 				.param("offset", INVALID_OFFSET.toString())
-				.param("limit", DEFAULT_LIMIT.toString()))
+				.param("limit", DEFAULT_LIMIT.toString())
+				.session(session))
 			.andDo(print())
 			.andExpect(status().isBadRequest());
 	}

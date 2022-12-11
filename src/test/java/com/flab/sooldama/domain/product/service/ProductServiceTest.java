@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
@@ -48,11 +49,18 @@ public class ProductServiceTest {
 
 	private static final Long PRODUCT_ID = 1L;
 
+	private static final String SESSION_KEY = "USER_EMAIL";
+
+	private static final String SESSION_VALUE = "test@tester.com";
+
 	@Test
 	@DisplayName("제품이 존재할 때 전체 제품 조회 성공 테스트 - offeet, limit에 알맞는 리스트를 반환")
 	public void getProductsTest() {
 
 		// given
+		final MockHttpSession session = new MockHttpSession();
+		session.setAttribute(SESSION_KEY, SESSION_VALUE);
+
 		List<Product> products = new ArrayList<>();
 		for (int i = DEFAULT_OFFSET; i < LIMIT; i++) {
 			products.add(
@@ -70,7 +78,7 @@ public class ProductServiceTest {
 		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID)).thenReturn(products);
 
 		// when
-		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID);
+		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID, session);
 
 		// then
 		verify(productMapper).selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID);
@@ -83,11 +91,14 @@ public class ProductServiceTest {
 	public void getProductsEmptyTest() {
 
 		// given
+		final MockHttpSession session = new MockHttpSession();
+		session.setAttribute(SESSION_KEY, SESSION_VALUE);
+
 		List<Product> products = new ArrayList<>();
 		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID)).thenReturn(products);
 
 		// when
-		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID);
+		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID, session);
 
 		// then
 		verify(productMapper).selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID);
@@ -99,6 +110,9 @@ public class ProductServiceTest {
 	public void getProductsByCategoryIdTest() {
 
 		// given
+		final MockHttpSession session = new MockHttpSession();
+		session.setAttribute(SESSION_KEY, SESSION_VALUE);
+
 		List<Product> products = new ArrayList<>();
 		for (int i = DEFAULT_OFFSET; i < LIMIT; i++) {
 			products.add(
@@ -118,7 +132,7 @@ public class ProductServiceTest {
 
 		// when
 		List<ProductResponse> productsResponse =
-			productService.getProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID);
+			productService.getProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID, session);
 
 		// then
 		verify(productMapper).selectProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID);
@@ -135,12 +149,15 @@ public class ProductServiceTest {
 	public void getProductsByCategoryIdEmptyTest() {
 
 		// given
+		final MockHttpSession session = new MockHttpSession();
+		session.setAttribute(SESSION_KEY, SESSION_VALUE);
+
 		List<Product> products = new ArrayList<>();
 		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID)).thenReturn(products);
 
 		// when
 		List<ProductResponse> productsResponse =
-			productService.getProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID);
+			productService.getProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID, session);
 
 		// then
 		verify(productMapper).selectProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID);
