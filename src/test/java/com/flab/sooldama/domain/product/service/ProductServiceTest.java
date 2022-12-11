@@ -82,10 +82,12 @@ public class ProductServiceTest {
 					.build());
 		}
 
-		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID)).thenReturn(products);
+		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID)).thenReturn(
+			products);
 
 		// when
-		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID, this.session);
+		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, LIMIT,
+			DEFAULT_CATEGORY_ID, this.session);
 
 		// then
 		verify(productMapper).selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID);
@@ -99,10 +101,12 @@ public class ProductServiceTest {
 
 		// given
 		List<Product> products = new ArrayList<>();
-		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID)).thenReturn(products);
+		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID)).thenReturn(
+			products);
 
 		// when
-		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID, this.session);
+		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, LIMIT,
+			DEFAULT_CATEGORY_ID, this.session);
 
 		// then
 		verify(productMapper).selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID);
