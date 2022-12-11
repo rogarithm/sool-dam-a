@@ -6,6 +6,7 @@ import com.flab.sooldama.domain.product.dto.response.ProductResponse;
 import com.flab.sooldama.domain.product.exception.ProductNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class ProductService {
     private final ProductMapper productMapper;
 
-	public List<ProductResponse> getProducts(Integer offset, Integer limit, Long categoryId) {
+	public List<ProductResponse> getProducts(Integer offset, Integer limit, Long categoryId, HttpSession session) {
 		List<Product> products = productMapper.selectProducts(offset, limit, categoryId);
 		List<ProductResponse> productResponses = new ArrayList<>();
 

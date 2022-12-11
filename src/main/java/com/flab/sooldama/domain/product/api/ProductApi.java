@@ -3,6 +3,7 @@ package com.flab.sooldama.domain.product.api;
 import com.flab.sooldama.domain.product.dto.response.ProductResponse;
 import com.flab.sooldama.domain.product.service.ProductService;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +37,11 @@ public class ProductApi {
     public ResponseEntity<List<ProductResponse>> getProducts(
 		@RequestParam(defaultValue = "0") @Min(0) Integer offset,
 		@RequestParam(defaultValue = "20") Integer limit,
-		@RequestParam(required = false) Long categoryId) {
+		@RequestParam(required = false) Long categoryId,
+		HttpSession session) {
 
 		List<ProductResponse> productsResponse =
-			productService.getProducts(offset, limit, categoryId);
+			productService.getProducts(offset, limit, categoryId, session);
 
 		return ResponseEntity.ok().body(productsResponse);
 	}
