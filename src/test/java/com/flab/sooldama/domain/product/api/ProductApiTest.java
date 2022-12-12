@@ -1,5 +1,6 @@
 package com.flab.sooldama.domain.product.api;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.flab.sooldama.domain.product.dto.response.ProductResponse;
 import com.flab.sooldama.domain.product.exception.ProductNotFoundException;
 import com.flab.sooldama.domain.product.service.ProductService;
+import com.flab.sooldama.domain.user.exception.NoSuchUserException;
+import com.flab.sooldama.global.exception.AuthenticationFailException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -165,5 +168,30 @@ public class ProductApiTest {
 
 		// 행위 검증
 		verify(productService, times(1)).getProductById(NONEXISTING_ID, this.session);
+	}
+
+	@Test
+	@DisplayName("로그인하지 않고 요청 시 인증 실패하고 예외 발생")
+	public void getProductNoLogin() throws Exception {
+		// 테스트 데이터 및 동작 정의
+		Long PRODUCT_ID = 1L;
+		MockHttpSession sessionNoLoginInfo = new MockHttpSession();
+
+		when(productService.getProductById(PRODUCT_ID, sessionNoLoginInfo)).thenThrow(
+			AuthenticationFailException.class);
+
+		// 실행
+		this.mockMvc
+			.perform(get("/products/{PRODUCT_ID}", PRODUCT_ID)
+				.session(sessionNoLoginInfo))
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+
+		// 행위 검증
+		assertThrows(AuthenticationFailException.class, () -> {
+			productService.getProductById(PRODUCT_ID, sessionNoLoginInfo);
+		});
+
+		verify(productService, times(2)).getProductById(PRODUCT_ID, sessionNoLoginInfo);
 	}
 }

@@ -12,6 +12,8 @@ import com.flab.sooldama.domain.product.dao.ProductMapper;
 import com.flab.sooldama.domain.product.domain.Product;
 import com.flab.sooldama.domain.product.dto.response.ProductResponse;
 import com.flab.sooldama.domain.product.exception.ProductNotFoundException;
+import com.flab.sooldama.domain.user.exception.NoSuchUserException;
+import com.flab.sooldama.global.exception.AuthenticationFailException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -205,5 +207,30 @@ public class ProductServiceTest {
 
 			// when
 			() -> productService.getProductById(PRODUCT_ID, this.session));
+	}
+
+	@Test
+	@DisplayName("로그인하지 않고 요청 시 인증 실패하고 예외 발생")
+	public void getProductNoLogin() {
+
+		// given
+		Product product = Product.builder()
+			.id(PRODUCT_ID)
+			.productCategoryId(1L)
+			.name("test")
+			.price(1000)
+			.imageUrl("test")
+			.description("test")
+			.abv(1.0)
+			.capacity(350)
+			.build();
+
+		MockHttpSession sessionNoLoginInfo = new MockHttpSession();
+
+		// then
+		assertThrows(AuthenticationFailException.class,
+
+			// when
+			() -> productService.getProductById(PRODUCT_ID, sessionNoLoginInfo));
 	}
 }
