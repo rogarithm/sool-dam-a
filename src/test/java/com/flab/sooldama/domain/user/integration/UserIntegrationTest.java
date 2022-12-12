@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 public class UserIntegrationTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	private MockMvc mockMvc;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -40,7 +40,7 @@ public class UserIntegrationTest {
 	private UserMapper userMapper;
 
 	@Autowired
-	MockHttpSession session;
+	private MockHttpSession session;
 
 	@BeforeEach
 	public void setUp()
