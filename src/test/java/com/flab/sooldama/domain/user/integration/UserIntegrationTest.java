@@ -39,6 +39,9 @@ public class UserIntegrationTest {
 	@Autowired
 	private UserMapper userMapper;
 
+	@Autowired
+	MockHttpSession session;
+
 	@BeforeEach
 	public void setUp()
 		throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
@@ -128,4 +131,25 @@ public class UserIntegrationTest {
 			.andExpect(status().isOk());
 	}
 
+	@Test
+	@DisplayName("로그인으로 생성된 세션이 있어야 로그아웃에 성공한다")
+	public void logoutSuccess() throws Exception {
+		// 테스트 데이터
+		LoginUserRequest validRequest = LoginUserRequest.builder()
+			.email("test2@gamil.com")
+			.password("test2")
+			.build();
+
+		String content = objectMapper.writeValueAsString(validRequest);
+
+		this.session.setAttribute("USER_EMAIL", "test2@gamil.com");
+
+		// 실행
+		mockMvc.perform(post("/users/logout")
+				.session(this.session)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isOk());
+	}
 }
