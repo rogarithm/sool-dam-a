@@ -135,13 +135,6 @@ public class UserIntegrationTest {
 	@DisplayName("로그아웃은 로그인으로 생성된 세션이 있을 경우 성공한다")
 	public void logoutSuccess() throws Exception {
 		// 테스트 데이터
-		LoginUserRequest validRequest = LoginUserRequest.builder()
-			.email("test2@gamil.com")
-			.password("test2")
-			.build();
-
-		String content = objectMapper.writeValueAsString(validRequest);
-
 		this.session.setAttribute("USER_EMAIL", "test2@gamil.com");
 
 		// 실행
