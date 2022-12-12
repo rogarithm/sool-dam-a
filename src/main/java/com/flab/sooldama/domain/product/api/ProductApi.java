@@ -50,9 +50,10 @@ public class ProductApi {
 	@PathVariable 어노테이션은 Url 파라미터를 사용할 수 있도록 도와줍니다.
 	 */
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long productId) {
+	public ResponseEntity<ProductResponse> getProduct(@PathVariable Long productId,
+		HttpSession session) {
 
-        ProductResponse productsResponse = productService.getProductById(productId);
-        return ResponseEntity.ok().body(productsResponse);
-    }
+		ProductResponse productsResponse = productService.getProductById(productId, session);
+		return ResponseEntity.ok().body(productsResponse);
+	}
 }

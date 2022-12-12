@@ -35,8 +35,13 @@ public class ProductService {
         return productResponses;
     }
 
-    public ProductResponse getProductById(Long productId) {
-        Product product = productMapper.selectProductById(productId)
+    public ProductResponse getProductById(Long productId, HttpSession session) {
+
+		if (session.getAttribute(USER_EMAIL) == null) {
+			throw new AuthenticationFailException("로그인이 필요한 서비스입니다");
+		}
+
+		Product product = productMapper.selectProductById(productId)
 			.orElseThrow(() -> new ProductNotFoundException("제품이 존재하지 않습니다."));
 
         return ProductResponse.of(product);
