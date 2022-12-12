@@ -145,4 +145,15 @@ public class UserIntegrationTest {
 			.andDo(print())
 			.andExpect(status().isOk());
 	}
+
+	@Test
+	@DisplayName("로그인한 상태가 아니라면 로그아웃에 실패한다")
+	public void logoutFail() throws Exception {
+
+		mockMvc.perform(post("/users/logout")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+	}
 }
