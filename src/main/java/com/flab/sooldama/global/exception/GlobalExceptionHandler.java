@@ -61,4 +61,9 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+	@ExceptionHandler(AuthenticationFailException.class)
+	public ResponseEntity<Void> handleAuthenticationFailException(AuthenticationFailException e) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	}
 }
