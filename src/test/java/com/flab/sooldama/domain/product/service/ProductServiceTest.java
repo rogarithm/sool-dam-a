@@ -185,7 +185,7 @@ public class ProductServiceTest {
 		when(productMapper.selectProductById(PRODUCT_ID)).thenReturn(Optional.ofNullable(product));
 
 		// when
-		ProductResponse productResponse = productService.getProductById(PRODUCT_ID);
+		ProductResponse productResponse = productService.getProductById(PRODUCT_ID, this.session);
 
 		// then
 		verify(productMapper).selectProductById(PRODUCT_ID);
@@ -204,6 +204,6 @@ public class ProductServiceTest {
 		assertThrows(ProductNotFoundException.class,
 
 			// when
-			() -> productService.getProductById(PRODUCT_ID));
+			() -> productService.getProductById(PRODUCT_ID, this.session));
 	}
 }

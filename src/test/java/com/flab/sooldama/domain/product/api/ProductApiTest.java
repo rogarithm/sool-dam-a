@@ -134,16 +134,17 @@ public class ProductApiTest {
 		// 테스트 데이터 및 동작 정의
 		Long PRODUCT_ID = 1L;
 
-		when(productService.getProductById(PRODUCT_ID)).thenReturn(this.products.get(0));
+		when(productService.getProductById(PRODUCT_ID, this.session)).thenReturn(this.products.get(0));
 
 		// 실행
 		this.mockMvc
-			.perform(get("/products/{PRODUCT_ID}", PRODUCT_ID))
+			.perform(get("/products/{PRODUCT_ID}", PRODUCT_ID)
+				.session(this.session))
 			.andDo(print())
 			.andExpect(status().isOk());
 
 		// 행위 검증
-		verify(productService, times(1)).getProductById(PRODUCT_ID);
+		verify(productService, times(1)).getProductById(PRODUCT_ID, this.session);
 	}
 
 	@Test
@@ -153,15 +154,16 @@ public class ProductApiTest {
 		Long NONEXISTING_ID = -1L;
 
 		doThrow(ProductNotFoundException.class).when(productService)
-			.getProductById(NONEXISTING_ID);
+			.getProductById(NONEXISTING_ID, this.session);
 
 		// 실행
 		this.mockMvc
-			.perform(get("/products/{NONEXISTING_ID}", NONEXISTING_ID))
+			.perform(get("/products/{NONEXISTING_ID}", NONEXISTING_ID)
+				.session(this.session))
 			.andDo(print())
 			.andExpect(status().isNotFound());
 
 		// 행위 검증
-		verify(productService, times(1)).getProductById(NONEXISTING_ID);
+		verify(productService, times(1)).getProductById(NONEXISTING_ID, this.session);
 	}
 }
