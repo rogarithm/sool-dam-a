@@ -3,6 +3,8 @@ package com.flab.sooldama.domain.user.api;
 import com.flab.sooldama.domain.user.dto.request.JoinUserRequest;
 import com.flab.sooldama.domain.user.dto.request.LoginUserRequest;
 import com.flab.sooldama.domain.user.dto.response.JoinUserResponse;
+import com.flab.sooldama.domain.user.exception.NoSuchUserException;
+import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
 import com.flab.sooldama.domain.user.service.UserService;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -24,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserApi {
 
 	private final UserService userService;
+
+	private static final String USER_EMAIL = "USER_EMAIL";
 
     /*
     @GetMapping 어노테이션은 HTTP GET 요청을 처리하는 메서드를 맵핑(@RequestMapping) 하는 어노테이션 입니다.
@@ -49,6 +53,11 @@ public class UserApi {
 
 	@PostMapping(path = "/login")
 	public ResponseEntity<Void> loginUser(@RequestBody LoginUserRequest request, HttpSession session) {
+
+		if (session.getAttribute(USER_EMAIL) != null) {
+			throw new UserAlreadyLoggedinException("이미 로그인한 사용자입니다");
+		}
+
 		userService.loginUser(request, session);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
@@ -56,6 +65,11 @@ public class UserApi {
 
 	@PostMapping(path = "/logout")
 	public ResponseEntity<Void> logoutUser(HttpSession session) {
+
+		if (session.getAttribute(USER_EMAIL) == null) {
+			throw new NoSuchUserException("로그인한 사용자가 아닙니다");
+		}
+
 		userService.logoutUser(session);
 
 		return ResponseEntity.status(HttpStatus.OK).build();

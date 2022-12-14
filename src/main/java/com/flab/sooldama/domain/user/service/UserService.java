@@ -8,7 +8,6 @@ import com.flab.sooldama.domain.user.dto.response.JoinUserResponse;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;
 import com.flab.sooldama.domain.user.exception.DuplicateEmailExistsException;
 import com.flab.sooldama.domain.user.exception.PasswordNotMatchException;
-import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -86,17 +85,10 @@ public class UserService {
 			throw new PasswordNotMatchException("비밀번호가 다릅니다");
 		}
 
-		if (session.getAttribute(USER_EMAIL) != null) {
-			throw new UserAlreadyLoggedinException("이미 로그인한 사용자입니다");
-		}
-
 		session.setAttribute(USER_EMAIL, request.getEmail());
 	}
 
 	public void logoutUser(HttpSession session) {
-		if (session.getAttribute(USER_EMAIL) == null) {
-			throw new NoSuchUserException("로그인한 사용자가 아닙니다");
-		}
 
 		session.invalidate();
 	}
