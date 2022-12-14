@@ -4,8 +4,8 @@ import com.flab.sooldama.domain.user.dto.request.JoinUserRequest;
 import com.flab.sooldama.domain.user.dto.request.LoginUserRequest;
 import com.flab.sooldama.domain.user.dto.response.JoinUserResponse;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;
-import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
 import com.flab.sooldama.domain.user.service.UserService;
+import com.flab.sooldama.global.exception.AuthenticationFailException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,7 @@ public class UserApi {
 	public ResponseEntity<Void> loginUser(@RequestBody LoginUserRequest request, HttpSession session) {
 
 		if (session.getAttribute(USER_EMAIL) != null) {
-			throw new UserAlreadyLoggedinException("이미 로그인한 사용자입니다");
+			throw new AuthenticationFailException("이미 로그인한 사용자입니다");
 		}
 
 		userService.loginUser(request, session);
