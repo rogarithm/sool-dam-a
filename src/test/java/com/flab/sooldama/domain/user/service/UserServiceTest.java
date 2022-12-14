@@ -16,12 +16,10 @@ import com.flab.sooldama.domain.user.dto.response.JoinUserResponse;
 import com.flab.sooldama.domain.user.exception.DuplicateEmailExistsException;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;
 import com.flab.sooldama.domain.user.exception.PasswordNotMatchException;
-import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -245,41 +243,6 @@ class UserServiceTest {
 	}
 
 	@Test
-	@DisplayName("중복 로그인을 할 수 없다")
-	public void cannotDoDuplicatelogin() throws InvocationTargetException, IllegalAccessException {
-		// 테스트 데이터 및 동작 정의
-		String validPassword = this.request.getPassword();
-
-		String encryptedValidPassword = (String) this.passwordEncryptMethod.invoke(
-			this.passwordEncryptor, this.request.getPassword());
-
-		LoginUserRequest validRequest = LoginUserRequest.builder()
-			.email(this.request.getEmail())
-			.password(validPassword)
-			.build();
-
-		User validUser = User.builder()
-			.email(this.request.getEmail())
-			.password(encryptedValidPassword)
-			.name(this.request.getName())
-			.phoneNumber(this.request.getPhoneNumber())
-			.nickname(this.request.getNickname())
-			.isAdult(this.request.getIsAdult())
-			.createdAt(LocalDateTime.now())
-			.build();
-
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("USER_EMAIL", validRequest.getEmail());
-
-		when(userMapper.findUserByEmail(any(String.class))).thenReturn(Optional.of(validUser));
-
-		// 실행 및 행위 검증
-		Assertions.assertThrows(UserAlreadyLoggedinException.class,
-			() -> userService.loginUser(validRequest, session));
-		verify(userMapper).findUserByEmail(any(String.class));
-	}
-
-	@Test
 	@DisplayName("로그인 성공 테스트")
 	public void loginSuccess()
 		throws InvocationTargetException, IllegalAccessException {
@@ -313,19 +276,6 @@ class UserServiceTest {
 
 		// 행위 검증
 		verify(userMapper).findUserByEmail(any(String.class));
-	}
-
-	@Test
-	@DisplayName("로그아웃 실패 테스트")
-	public void logoutFail() {
-		// 테스트 데이터 및 동작 정의
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("USER_EMAIL", null);
-
-		// 실행 및 행위 검증
-		assertThrows(NoSuchUserException.class, () -> {
-			userService.logoutUser(session);
-		});
 	}
 
 	@Test

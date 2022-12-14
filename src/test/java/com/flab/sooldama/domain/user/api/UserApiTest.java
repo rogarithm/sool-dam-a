@@ -18,6 +18,7 @@ import com.flab.sooldama.domain.user.exception.DuplicateEmailExistsException;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;
 import com.flab.sooldama.domain.user.exception.PasswordNotMatchException;
 import com.flab.sooldama.domain.user.service.UserService;
+import com.flab.sooldama.global.exception.AuthenticationFailException;
 import java.util.Iterator;
 import java.util.Set;
 import javax.servlet.http.HttpSession;
@@ -229,6 +230,34 @@ public class UserApiTest {
 	}
 
 	@Test
+	@DisplayName("중복으로 로그인할 수 없다")
+	public void cannotDoDuplicatelogin() throws Exception {
+		// 테스트 데이터
+		LoginUserRequest validRequest = LoginUserRequest.builder()
+			.email(this.request.getEmail())
+			.password(this.request.getPassword())
+			.build();
+
+		String content = objectMapper.writeValueAsString(validRequest);
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("USER_EMAIL", validRequest.getEmail());
+
+		// 실행
+		mockMvc.perform(post("/users/login")
+				.content(content)
+				.session(session)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+
+		// 확인
+		assertThrows(AuthenticationFailException.class, () -> {
+			userApi.loginUser(validRequest, session);
+		});
+	}
+
+	@Test
 	@DisplayName("로그인 성공 테스트")
 	public void loginSuccess() throws Exception {
 		// 테스트 데이터 및 동작 정의
@@ -264,9 +293,6 @@ public class UserApiTest {
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("USER_EMAIL", null);
 
-		doThrow(NoSuchUserException.class).when(userService)
-			.logoutUser(any(HttpSession.class));
-
 		// 실행
 		mockMvc.perform(post("/users/logout")
 				.session(session)
@@ -277,10 +303,8 @@ public class UserApiTest {
 
 		// 행위 검증
 		assertThrows(NoSuchUserException.class, () -> {
-			userService.logoutUser(session);
+			userApi.logoutUser(session);
 		});
-
-		verify(userService, times(2)).logoutUser(any(HttpSession.class));
 	}
 
 	@Test
