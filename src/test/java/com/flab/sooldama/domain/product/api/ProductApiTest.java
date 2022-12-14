@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.flab.sooldama.domain.product.dto.response.ProductResponse;
 import com.flab.sooldama.domain.product.exception.ProductNotFoundException;
 import com.flab.sooldama.domain.product.service.ProductService;
-import com.flab.sooldama.domain.user.exception.NoSuchUserException;
 import com.flab.sooldama.global.exception.AuthenticationFailException;
 import java.util.ArrayList;
 import java.util.List;
@@ -173,12 +172,9 @@ public class ProductApiTest {
 	@Test
 	@DisplayName("로그인하지 않고 요청 시 인증 실패하고 예외 발생")
 	public void getProductNoLogin() throws Exception {
-		// 테스트 데이터 및 동작 정의
+		// 테스트 데이터
 		Long PRODUCT_ID = 1L;
 		MockHttpSession sessionNoLoginInfo = new MockHttpSession();
-
-		when(productService.getProductById(PRODUCT_ID, sessionNoLoginInfo)).thenThrow(
-			AuthenticationFailException.class);
 
 		// 실행
 		this.mockMvc
@@ -187,11 +183,10 @@ public class ProductApiTest {
 			.andDo(print())
 			.andExpect(status().isBadRequest());
 
-		// 행위 검증
+		// 확인
 		assertThrows(AuthenticationFailException.class, () -> {
-			productService.getProductById(PRODUCT_ID, sessionNoLoginInfo);
+			productApi.getProduct(PRODUCT_ID, sessionNoLoginInfo);
 		});
 
-		verify(productService, times(2)).getProductById(PRODUCT_ID, sessionNoLoginInfo);
 	}
 }
