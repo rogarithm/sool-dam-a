@@ -1,5 +1,6 @@
 package com.flab.sooldama.global.exception;
 
+import com.flab.sooldama.domain.product.exception.AuthenticationFailException;
 import com.flab.sooldama.domain.product.exception.ProductNotFoundException;
 import com.flab.sooldama.domain.user.exception.DuplicateEmailExistsException;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;

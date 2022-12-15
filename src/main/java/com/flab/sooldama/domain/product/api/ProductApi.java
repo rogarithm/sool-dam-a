@@ -2,7 +2,7 @@ package com.flab.sooldama.domain.product.api;
 
 import com.flab.sooldama.domain.product.dto.response.ProductResponse;
 import com.flab.sooldama.domain.product.service.ProductService;
-import com.flab.sooldama.global.exception.AuthenticationFailException;
+import com.flab.sooldama.domain.product.exception.AuthenticationFailException;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Min;
