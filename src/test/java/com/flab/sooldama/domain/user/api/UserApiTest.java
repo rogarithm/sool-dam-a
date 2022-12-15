@@ -17,6 +17,7 @@ import com.flab.sooldama.domain.user.dto.request.LoginUserRequest;
 import com.flab.sooldama.domain.user.exception.DuplicateEmailExistsException;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;
 import com.flab.sooldama.domain.user.exception.PasswordNotMatchException;
+import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
 import com.flab.sooldama.domain.user.service.UserService;
 import com.flab.sooldama.global.exception.AuthenticationFailException;
 import java.util.Iterator;
@@ -252,7 +253,7 @@ public class UserApiTest {
 			.andExpect(status().isBadRequest());
 
 		// 확인
-		assertThrows(AuthenticationFailException.class, () -> {
+		assertThrows(UserAlreadyLoggedinException.class, () -> {
 			userApi.loginUser(validRequest, session);
 		});
 	}
