@@ -4,6 +4,7 @@ import com.flab.sooldama.domain.product.exception.ProductNotFoundException;
 import com.flab.sooldama.domain.user.exception.DuplicateEmailExistsException;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;
 import com.flab.sooldama.domain.user.exception.PasswordNotMatchException;
+import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -61,6 +62,11 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+	@ExceptionHandler(UserAlreadyLoggedinException.class)
+	public ResponseEntity<Void> handleUserAlreadyLoggedinException(UserAlreadyLoggedinException e) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	}
 
 	@ExceptionHandler(AuthenticationFailException.class)
 	public ResponseEntity<Void> handleAuthenticationFailException(AuthenticationFailException e) {
