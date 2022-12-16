@@ -182,11 +182,5 @@ public class ProductApiTest {
 				.session(sessionNoLoginInfo))
 			.andDo(print())
 			.andExpect(status().isBadRequest());
-
-		// 확인
-		assertThrows(AuthenticationFailException.class, () -> {
-			productApi.getProduct(PRODUCT_ID, sessionNoLoginInfo);
-		});
-
 	}
 }

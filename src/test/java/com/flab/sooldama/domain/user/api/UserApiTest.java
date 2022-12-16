@@ -250,11 +250,6 @@ public class UserApiTest {
 				.accept(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isBadRequest());
-
-		// 확인
-		assertThrows(UserAlreadyLoggedinException.class, () -> {
-			userApi.loginUser(validRequest, session);
-		});
 	}
 
 	@Test
