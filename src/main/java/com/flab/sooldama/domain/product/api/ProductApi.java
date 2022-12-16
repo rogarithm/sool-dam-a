@@ -43,10 +43,6 @@ public class ProductApi {
 		@RequestParam(required = false) Long categoryId,
 		HttpSession session) {
 
-		if (session.getAttribute(USER_EMAIL) == null) {
-			throw new AuthenticationFailException("로그인이 필요한 서비스입니다");
-		}
-
 		List<ProductResponse> productsResponse =
 			productService.getProducts(offset, limit, categoryId, session);
 
@@ -59,10 +55,6 @@ public class ProductApi {
     @GetMapping("/{productId}")
 	public ResponseEntity<ProductResponse> getProduct(@PathVariable Long productId,
 		HttpSession session) {
-
-		if (session.getAttribute(USER_EMAIL) == null) {
-			throw new AuthenticationFailException("로그인이 필요한 서비스입니다");
-		}
 
 		ProductResponse productsResponse = productService.getProductById(productId, session);
 		return ResponseEntity.ok().body(productsResponse);
