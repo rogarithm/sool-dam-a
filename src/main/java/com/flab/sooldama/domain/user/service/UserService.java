@@ -89,9 +89,6 @@ public class UserService {
 	}
 
 	public void logoutUser(HttpSession session) {
-		if (session.getAttribute(USER_EMAIL) == null) {
-			throw new NoSuchUserException("로그인한 사용자가 아닙니다");
-		}
 
 		session.invalidate();
 	}

@@ -17,13 +17,16 @@ import com.flab.sooldama.domain.user.dto.request.LoginUserRequest;
 import com.flab.sooldama.domain.user.exception.DuplicateEmailExistsException;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;
 import com.flab.sooldama.domain.user.exception.PasswordNotMatchException;
+import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
 import com.flab.sooldama.domain.user.service.UserService;
+import com.flab.sooldama.global.exception.AuthenticationFailException;
 import java.util.Iterator;
 import java.util.Set;
 import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -50,7 +53,7 @@ import org.springframework.test.web.servlet.MockMvc;
 public class UserApiTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	private MockMvc mockMvc;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -62,21 +65,28 @@ public class UserApiTest {
 	private UserService userService;
 
 	@Autowired
-	Validator validator;
+	private Validator validator;
+
+	private JoinUserRequest request;
+
+	@BeforeEach
+	public void setUp() {
+		this.request = JoinUserRequest.builder()
+			.email("sehoon@fmail.com")
+			.password("abracadabra")
+			.name("sehoon gim")
+			.phoneNumber("010-1010-1010")
+			.nickname("sesoon")
+			.isAdult(true)
+			.build();
+	}
 
 	@Test
 	@DisplayName("회원가입 성공 테스트")
 	public void joinSuccessTest() throws Exception {
 		//Given 서비스를 거친 결과값
 		String content = objectMapper.writeValueAsString(
-			JoinUserRequest.builder()
-				.email("younghee@fmail.com")
-				.password("1q2w3e4r!")
-				.name("younghee lee")
-				.phoneNumber("010-0101-0101")
-				.nickname("yh")
-				.isAdult(true)
-				.build());
+			this.request);
 
 		//Then 회원가입 api에 content를 넣고 호출했을 때
 		mockMvc.perform(post("/users")
@@ -93,8 +103,8 @@ public class UserApiTest {
 		//Given 서비스를 거친 결과값
 		String content = objectMapper.writeValueAsString(
 			JoinUserRequest.builder()
-				.password("1q2w3e4r!")
-				.name("younghee lee")
+				.password(this.request.getPassword())
+				.name(this.request.getName())
 				.build());
 
 		//Then 회원가입 api에 content를 넣고 호출했을 때
@@ -109,16 +119,7 @@ public class UserApiTest {
 	@DisplayName("회원가입 중 이메일 중복 예외 발생시 Controller Advice가 처리")
 	public void duplicatedEmailExceptionHandledByControllerAdviceTest() throws Exception {
 		// 테스트 데이터 및 동작 정의
-		JoinUserRequest request = JoinUserRequest.builder()
-			.email("sehoon@fmail.com")
-			.password("abracadabra")
-			.name("sehoon gim")
-			.phoneNumber("010-1010-1010")
-			.nickname("sesoon")
-			.isAdult(true)
-			.build();
-
-		String content = objectMapper.writeValueAsString(request);
+		String content = objectMapper.writeValueAsString(this.request);
 
 		when(userService.insertUser(any(JoinUserRequest.class))).thenThrow(
 			DuplicateEmailExistsException.class);
@@ -143,11 +144,11 @@ public class UserApiTest {
 
 		JoinUserRequest request = JoinUserRequest.builder()
 			.email(invalidEmail)
-			.password("abracadabra")
-			.name("sehoon gim")
-			.phoneNumber("010-1010-1010")
-			.nickname("sesoon")
-			.isAdult(true)
+			.password(this.request.getPassword())
+			.name(this.request.getName())
+			.phoneNumber(this.request.getPhoneNumber())
+			.nickname(this.request.getNickname())
+			.isAdult(this.request.getIsAdult())
 			.build();
 
 		Set<ConstraintViolation<JoinUserRequest>> validate = validator.validate(request);
@@ -163,9 +164,11 @@ public class UserApiTest {
 	@DisplayName("회원가입되지 않은 이메일로 로그인 시 로그인 실패")
 	public void loginFailEmailNotFound() throws Exception {
 		// 테스트 데이터 및 동작 정의
+		String yetJoinedUserEmail = "yet-joined@fmail.com";
+
 		LoginUserRequest invalidRequest = LoginUserRequest.builder()
-			.email("yet-joined@fmail.com")
-			.password("q1w2e3!")
+			.email(yetJoinedUserEmail)
+			.password(this.request.getPassword())
 			.build();
 
 		String content = objectMapper.writeValueAsString(invalidRequest);
@@ -196,9 +199,11 @@ public class UserApiTest {
 	@DisplayName("등록된 사용자이더라도 비밀번호 틀리면 로그인 불가")
 	public void loginFailPasswordNotMatch() throws Exception {
 		// 테스트 데이터 및 동작 정의
+		String wrongPassword = "q1w2e3!";
+
 		LoginUserRequest invalidRequest = LoginUserRequest.builder()
-			.email("joined@fmail.com")
-			.password("q1w2e3!")
+			.email(this.request.getEmail())
+			.password(wrongPassword)
 			.build();
 
 		String content = objectMapper.writeValueAsString(invalidRequest);
@@ -226,12 +231,40 @@ public class UserApiTest {
 	}
 
 	@Test
+	@DisplayName("중복으로 로그인할 수 없다")
+	public void cannotDoDuplicatelogin() throws Exception {
+		// 테스트 데이터
+		LoginUserRequest validRequest = LoginUserRequest.builder()
+			.email(this.request.getEmail())
+			.password(this.request.getPassword())
+			.build();
+
+		String content = objectMapper.writeValueAsString(validRequest);
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("USER_EMAIL", validRequest.getEmail());
+
+		// 실행
+		mockMvc.perform(post("/users/login")
+				.content(content)
+				.session(session)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+
+		// 확인
+		assertThrows(UserAlreadyLoggedinException.class, () -> {
+			userApi.loginUser(validRequest, session);
+		});
+	}
+
+	@Test
 	@DisplayName("로그인 성공 테스트")
 	public void loginSuccess() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		LoginUserRequest validRequest = LoginUserRequest.builder()
-			.email("joined@fmail.com")
-			.password("q1w2e3!")
+			.email(this.request.getEmail())
+			.password(this.request.getPassword())
 			.build();
 
 		String content = objectMapper.writeValueAsString(validRequest);
@@ -261,9 +294,6 @@ public class UserApiTest {
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("USER_EMAIL", null);
 
-		doThrow(NoSuchUserException.class).when(userService)
-			.logoutUser(any(HttpSession.class));
-
 		// 실행
 		mockMvc.perform(post("/users/logout")
 				.session(session)
@@ -274,10 +304,8 @@ public class UserApiTest {
 
 		// 행위 검증
 		assertThrows(NoSuchUserException.class, () -> {
-			userService.logoutUser(session);
+			userApi.logoutUser(session);
 		});
-
-		verify(userService, times(2)).logoutUser(any(HttpSession.class));
 	}
 
 	@Test
@@ -285,8 +313,8 @@ public class UserApiTest {
 	public void logoutSuccess() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		LoginUserRequest validRequest = LoginUserRequest.builder()
-			.email("joined@fmail.com")
-			.password("q1w2e3!")
+			.email(this.request.getEmail())
+			.password(this.request.getPassword())
 			.build();
 
 		MockHttpSession session = new MockHttpSession();

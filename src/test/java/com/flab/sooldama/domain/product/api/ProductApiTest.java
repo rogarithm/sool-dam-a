@@ -1,5 +1,6 @@
 package com.flab.sooldama.domain.product.api;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.flab.sooldama.domain.product.dto.response.ProductResponse;
 import com.flab.sooldama.domain.product.exception.ProductNotFoundException;
 import com.flab.sooldama.domain.product.service.ProductService;
+import com.flab.sooldama.global.exception.AuthenticationFailException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +22,7 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(controllers = ProductApi.class)
@@ -36,11 +39,17 @@ public class ProductApiTest {
 
 	private List<ProductResponse> products;
 
+	private MockHttpSession session;
+
 	private static final Integer DEFAULT_OFFSET = 0;
 
 	private static final Integer DEFAULT_LIMIT = 20;
 
 	private static final Long DEFAULT_CATEGORY_ID = null;
+
+	private static final String SESSION_KEY = "USER_EMAIL";
+
+	private static final String SESSION_VALUE = "test@tester.com";
 
 	@BeforeEach
 	public void setUp() {
@@ -78,36 +87,45 @@ public class ProductApiTest {
 		products.add(product1);
 		products.add(product2);
 		products.add(product3);
+
+		this.session = new MockHttpSession();
+		this.session.setAttribute(SESSION_KEY, SESSION_VALUE);
 	}
 
 	@Test
 	@DisplayName("한 번에 여러 제품 조회 시 기본값 적용")
 	public void getProductsTest() throws Exception {
 		// 테스트 데이터 및 동작 정의
-		when(productService.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID))
+		when(productService.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID,
+			this.session))
 			.thenReturn(this.products);
 
 		// 실행
 		this.mockMvc
 			.perform(get("/products")
 				.param("offset", DEFAULT_OFFSET.toString())
-				.param("limit", DEFAULT_LIMIT.toString()))
+				.param("limit", DEFAULT_LIMIT.toString())
+				.session(this.session))
+			.andDo(print())
 			.andExpect(status().isOk());
 
 		// 행위 검증
 		verify(productService, times(1))
-			.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID);
+			.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID, this.session);
 	}
 
 	@Test
 	@DisplayName("offset이 0보다 작으면 유효성 검증 실패해서 service로 요청 전달 X")
 	public void getProductsFailTest() throws Exception {
+		// 테스트 데이터 및 동작 정의
 		Integer INVALID_OFFSET = -1;
 
+		// 실행
 		this.mockMvc
 			.perform(get("/products")
 				.param("offset", INVALID_OFFSET.toString())
-				.param("limit", DEFAULT_LIMIT.toString()))
+				.param("limit", DEFAULT_LIMIT.toString())
+				.session(this.session))
 			.andDo(print())
 			.andExpect(status().isBadRequest());
 	}
@@ -118,16 +136,17 @@ public class ProductApiTest {
 		// 테스트 데이터 및 동작 정의
 		Long PRODUCT_ID = 1L;
 
-		when(productService.getProductById(PRODUCT_ID)).thenReturn(this.products.get(0));
+		when(productService.getProductById(PRODUCT_ID, this.session)).thenReturn(this.products.get(0));
 
 		// 실행
 		this.mockMvc
-			.perform(get("/products/{PRODUCT_ID}", PRODUCT_ID))
+			.perform(get("/products/{PRODUCT_ID}", PRODUCT_ID)
+				.session(this.session))
 			.andDo(print())
 			.andExpect(status().isOk());
 
 		// 행위 검증
-		verify(productService, times(1)).getProductById(PRODUCT_ID);
+		verify(productService, times(1)).getProductById(PRODUCT_ID, this.session);
 	}
 
 	@Test
@@ -137,15 +156,37 @@ public class ProductApiTest {
 		Long NONEXISTING_ID = -1L;
 
 		doThrow(ProductNotFoundException.class).when(productService)
-			.getProductById(NONEXISTING_ID);
+			.getProductById(NONEXISTING_ID, this.session);
 
 		// 실행
 		this.mockMvc
-			.perform(get("/products/{NONEXISTING_ID}", NONEXISTING_ID))
+			.perform(get("/products/{NONEXISTING_ID}", NONEXISTING_ID)
+				.session(this.session))
 			.andDo(print())
 			.andExpect(status().isNotFound());
 
 		// 행위 검증
-		verify(productService, times(1)).getProductById(NONEXISTING_ID);
+		verify(productService, times(1)).getProductById(NONEXISTING_ID, this.session);
+	}
+
+	@Test
+	@DisplayName("로그인하지 않고 요청 시 인증 실패하고 예외 발생")
+	public void getProductNoLogin() throws Exception {
+		// 테스트 데이터
+		Long PRODUCT_ID = 1L;
+		MockHttpSession sessionNoLoginInfo = new MockHttpSession();
+
+		// 실행
+		this.mockMvc
+			.perform(get("/products/{PRODUCT_ID}", PRODUCT_ID)
+				.session(sessionNoLoginInfo))
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+
+		// 확인
+		assertThrows(AuthenticationFailException.class, () -> {
+			productApi.getProduct(PRODUCT_ID, sessionNoLoginInfo);
+		});
+
 	}
 }
