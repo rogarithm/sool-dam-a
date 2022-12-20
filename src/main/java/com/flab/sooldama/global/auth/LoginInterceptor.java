@@ -1,6 +1,5 @@
 package com.flab.sooldama.global.auth;
 
-import com.flab.sooldama.domain.product.exception.AuthenticationFailException;
 import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
