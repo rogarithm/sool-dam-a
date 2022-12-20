@@ -28,13 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RequiredArgsConstructor
 public class ProductApi {
-    private final ProductService productService;
+
+	private final ProductService productService;
 
 	/*
     @RequestParam 어노테이션은 쿼리스트링을 파라미터로 받을 수 있게 도와줍니다.
      */
-    @GetMapping("")
-    public ResponseEntity<List<ProductResponse>> getProducts(
+	@GetMapping("")
+	public ResponseEntity<List<ProductResponse>> getProducts(
 		@RequestParam(defaultValue = "0") @Min(0) Integer offset,
 		@RequestParam(defaultValue = "20") Integer limit,
 		@RequestParam(required = false) Long categoryId,
@@ -49,7 +50,7 @@ public class ProductApi {
 	/*
 	@PathVariable 어노테이션은 Url 파라미터를 사용할 수 있도록 도와줍니다.
 	 */
-    @GetMapping("/{productId}")
+	@GetMapping("/{productId}")
 	public ResponseEntity<ProductResponse> getProduct(@PathVariable Long productId,
 		HttpSession session) {
 
