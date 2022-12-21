@@ -106,8 +106,8 @@ public class ProductApiTest {
 			.andExpect(status().isOk());
 
 		// 행위 검증
-		verify(productService, times(1))
-			.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID, this.session);
+		verify(productService).getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID,
+			this.session);
 	}
 
 	@Test
@@ -132,7 +132,8 @@ public class ProductApiTest {
 		// 테스트 데이터 및 동작 정의
 		Long PRODUCT_ID = 1L;
 
-		when(productService.getProductById(PRODUCT_ID, this.session)).thenReturn(this.products.get(0));
+		when(productService.getProductById(PRODUCT_ID, this.session)).thenReturn(
+			this.products.get(0));
 
 		// 실행
 		this.mockMvc
@@ -162,7 +163,7 @@ public class ProductApiTest {
 			.andExpect(status().isNotFound());
 
 		// 행위 검증
-		verify(productService, times(1)).getProductById(NONEXISTING_ID, this.session);
+		verify(productService).getProductById(NONEXISTING_ID, this.session);
 	}
 
 	@Test
