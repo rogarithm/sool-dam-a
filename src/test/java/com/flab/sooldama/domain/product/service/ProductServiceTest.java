@@ -46,13 +46,13 @@ public class ProductServiceTest {
 
 	private static final Integer DEFAULT_OFFSET = 0;
 
-	private static final Integer LIMIT = 5;
+	private static final Integer VALID_LIMIT = 5;
 
 	private static final Long DEFAULT_CATEGORY_ID = null;
 
-	private static final Long CATEGORY_ID = 1L;
+	private static final Long VALID_CATEGORY_ID = 1L;
 
-	private static final Long PRODUCT_ID = 1L;
+	private static final Long VALID_PRODUCT_ID = 1L;
 
 	private static final String SESSION_ATTR_KEY_FOR_AUTH = "USER_EMAIL";
 
@@ -85,16 +85,16 @@ public class ProductServiceTest {
 			products.add(this.product);
 		}
 
-		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID)).thenReturn(
-			products);
+		when(productMapper.selectProducts(DEFAULT_OFFSET, VALID_LIMIT, DEFAULT_CATEGORY_ID))
+			.thenReturn(products);
 
 		// when
-		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, LIMIT,
-			DEFAULT_CATEGORY_ID, this.session);
+		List<ProductResponse> productsResponse = productService
+			.getProducts(DEFAULT_OFFSET, VALID_LIMIT, DEFAULT_CATEGORY_ID, this.session);
 
 		// then
-		verify(productMapper).selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID);
-		assertEquals(LIMIT - DEFAULT_OFFSET, productsResponse.size());
+		verify(productMapper).selectProducts(DEFAULT_OFFSET, VALID_LIMIT, DEFAULT_CATEGORY_ID);
+		assertEquals(VALID_LIMIT - DEFAULT_OFFSET, productsResponse.size());
 		assertFalse(productsResponse.isEmpty());
 	}
 
@@ -104,15 +104,15 @@ public class ProductServiceTest {
 
 		// given
 		List<Product> products = new ArrayList<>();
-		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID)).thenReturn(
-			products);
+		when(productMapper.selectProducts(DEFAULT_OFFSET, VALID_LIMIT, DEFAULT_CATEGORY_ID))
+			.thenReturn(products);
 
 		// when
-		List<ProductResponse> productsResponse = productService.getProducts(DEFAULT_OFFSET, LIMIT,
-			DEFAULT_CATEGORY_ID, this.session);
+		List<ProductResponse> productsResponse = productService
+			.getProducts(DEFAULT_OFFSET, VALID_LIMIT, DEFAULT_CATEGORY_ID, this.session);
 
 		// then
-		verify(productMapper).selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID);
+		verify(productMapper).selectProducts(DEFAULT_OFFSET, VALID_LIMIT, DEFAULT_CATEGORY_ID);
 		assertTrue(productsResponse.isEmpty());
 	}
 
@@ -126,20 +126,21 @@ public class ProductServiceTest {
 			products.add(this.product);
 		}
 
-		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID))
+		when(productMapper.selectProducts(DEFAULT_OFFSET, VALID_LIMIT, VALID_CATEGORY_ID))
 			.thenReturn(products);
 
 		// when
 		List<ProductResponse> productsResponse =
-			productService.getProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID, this.session);
+			productService.getProducts(DEFAULT_OFFSET, VALID_LIMIT, VALID_CATEGORY_ID,
+				this.session);
 
 		// then
-		verify(productMapper).selectProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID);
-		assertEquals(LIMIT - DEFAULT_OFFSET, productsResponse.size());
+		verify(productMapper).selectProducts(DEFAULT_OFFSET, VALID_LIMIT, VALID_CATEGORY_ID);
+		assertEquals(VALID_LIMIT - DEFAULT_OFFSET, productsResponse.size());
 		assertFalse(productsResponse.isEmpty());
 
 		for (Product product : products) {
-			assertEquals(CATEGORY_ID, product.getProductCategoryId());
+			assertEquals(VALID_CATEGORY_ID, product.getProductCategoryId());
 		}
 	}
 
@@ -149,14 +150,16 @@ public class ProductServiceTest {
 
 		// given
 		List<Product> products = new ArrayList<>();
-		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID)).thenReturn(products);
+		when(productMapper.selectProducts(DEFAULT_OFFSET, VALID_LIMIT,
+			VALID_CATEGORY_ID)).thenReturn(products);
 
 		// when
 		List<ProductResponse> productsResponse =
-			productService.getProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID, this.session);
+			productService.getProducts(DEFAULT_OFFSET, VALID_LIMIT, VALID_CATEGORY_ID,
+				this.session);
 
 		// then
-		verify(productMapper).selectProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID);
+		verify(productMapper).selectProducts(DEFAULT_OFFSET, VALID_LIMIT, VALID_CATEGORY_ID);
 		assertTrue(productsResponse.isEmpty());
 	}
 
@@ -165,28 +168,32 @@ public class ProductServiceTest {
 	public void getProductByIdTest() {
 
 
-		when(productMapper.selectProductById(PRODUCT_ID)).thenReturn(Optional.ofNullable(product));
+		// given
+		when(productMapper.selectProductById(VALID_PRODUCT_ID))
+			.thenReturn(Optional.ofNullable(this.product));
 
 		// when
-		ProductResponse productResponse = productService.getProductById(PRODUCT_ID, this.session);
+		ProductResponse productResponse = productService.getProductById(VALID_PRODUCT_ID,
+			this.session);
 
 		// then
-		verify(productMapper).selectProductById(PRODUCT_ID);
+		verify(productMapper).selectProductById(VALID_PRODUCT_ID);
 		assertNotNull(productResponse);
-		assertEquals(PRODUCT_ID, productResponse.getId());
+		assertEquals(VALID_PRODUCT_ID, productResponse.getId());
 	}
 
 	@Test
-	@DisplayName("아이디로 존재하지 않는 제품 조회 테스트")
+	@DisplayName("존재하지 않는 아이디로 제품을 조회할 수 없다")
 	public void getProductByIdFailTest() {
 
 		// given
-		when(productMapper.selectProductById(PRODUCT_ID)).thenReturn(Optional.empty());
+		Long INVALID_PRODUCT_ID = 1000L;
+		when(productMapper.selectProductById(INVALID_PRODUCT_ID)).thenReturn(Optional.empty());
 
 		// then
 		assertThrows(ProductNotFoundException.class,
 
 			// when
-			() -> productService.getProductById(PRODUCT_ID, this.session));
+			() -> productService.getProductById(INVALID_PRODUCT_ID, this.session));
 	}
 }
