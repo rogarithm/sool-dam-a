@@ -45,9 +45,9 @@ public class ProductApiTest {
 
 	private static final Long DEFAULT_CATEGORY_ID = null;
 
-	private static final String SESSION_KEY = "USER_EMAIL";
+	private static final String SESSION_ATTR_KEY_FOR_AUTH = "USER_EMAIL";
 
-	private static final String SESSION_VALUE = "test@tester.com";
+	private static final String SESSION_ATTR_VALUE_FOR_AUTH = "test@tester.com";
 
 	@BeforeEach
 	public void setUp() {
@@ -87,7 +87,7 @@ public class ProductApiTest {
 		products.add(product3);
 
 		this.session = new MockHttpSession();
-		this.session.setAttribute(SESSION_KEY, SESSION_VALUE);
+		this.session.setAttribute(SESSION_ATTR_KEY_FOR_AUTH, SESSION_ATTR_VALUE_FOR_AUTH);
 	}
 
 	@Test
