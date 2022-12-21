@@ -111,7 +111,7 @@ public class ProductApiTest {
 	}
 
 	@Test
-	@DisplayName("offset이 0보다 작으면 유효성 검증 실패해서 service로 요청 전달 X")
+	@DisplayName("컨트롤러는 요청 파라미터 값이 유효한지 검증한다")
 	public void getProductsFailTest() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		Integer INVALID_OFFSET = -1;
@@ -147,7 +147,7 @@ public class ProductApiTest {
 	}
 
 	@Test
-	@DisplayName("존재하지 않는 제품 아이디로 제품 조회 시 실패")
+	@DisplayName("존재하지 않는 제품 아이디로 제품 조회 불가")
 	public void getProductByNonExistingId() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		Long NONEXISTING_ID = -1L;
@@ -167,7 +167,7 @@ public class ProductApiTest {
 	}
 
 	@Test
-	@DisplayName("로그인하지 않고 요청 시 인증 실패하고 예외 발생")
+	@DisplayName("로그인해야 제품을 조회할 수 있다")
 	public void getProductNoLogin() throws Exception {
 		// 테스트 데이터
 		Long PRODUCT_ID = 1L;
