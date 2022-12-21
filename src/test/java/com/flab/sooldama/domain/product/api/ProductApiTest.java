@@ -82,9 +82,7 @@ public class ProductApiTest {
 			.capacity(500)
 			.build();
 		this.products = new ArrayList<ProductResponse>();
-		products.add(product1);
-		products.add(product2);
-		products.add(product3);
+		products.addAll(Arrays.asList(product1, product2, product3));
 
 		this.session = new MockHttpSession();
 		this.session.setAttribute(SESSION_ATTR_KEY_FOR_AUTH, SESSION_ATTR_VALUE_FOR_AUTH);
