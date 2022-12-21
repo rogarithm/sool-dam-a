@@ -42,6 +42,8 @@ public class ProductServiceTest {
 
 	private MockHttpSession session;
 
+	private Product product;
+
 	private static final Integer DEFAULT_OFFSET = 0;
 
 	private static final Integer LIMIT = 5;
@@ -58,6 +60,17 @@ public class ProductServiceTest {
 
 	@BeforeEach
 	public void setUp() {
+		this.product = Product.builder()
+			.id(VALID_PRODUCT_ID)
+			.productCategoryId(VALID_CATEGORY_ID)
+			.name("test")
+			.price(1000)
+			.imageUrl("test")
+			.description("test")
+			.abv(1.0)
+			.capacity(350)
+			.build();
+
 		this.session = new MockHttpSession();
 		this.session.setAttribute(SESSION_ATTR_KEY_FOR_AUTH, SESSION_ATTR_VALUE_FOR_AUTH);
 	}
@@ -68,17 +81,8 @@ public class ProductServiceTest {
 
 		// given
 		List<Product> products = new ArrayList<>();
-		for (int i = DEFAULT_OFFSET; i < LIMIT; i++) {
-			products.add(
-				Product.builder()
-					.productCategoryId(1L)
-					.name("test")
-					.price(1000)
-					.imageUrl("test")
-					.description("test")
-					.abv(1.0)
-					.capacity(350)
-					.build());
+		for (int i = DEFAULT_OFFSET; i < VALID_LIMIT; i++) {
+			products.add(this.product);
 		}
 
 		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, DEFAULT_CATEGORY_ID)).thenReturn(
@@ -118,17 +122,8 @@ public class ProductServiceTest {
 
 		// given
 		List<Product> products = new ArrayList<>();
-		for (int i = DEFAULT_OFFSET; i < LIMIT; i++) {
-			products.add(
-				Product.builder()
-					.productCategoryId(CATEGORY_ID)
-					.name("test")
-					.price(1000)
-					.imageUrl("test")
-					.description("test")
-					.abv(1.0)
-					.capacity(350)
-					.build());
+		for (int i = DEFAULT_OFFSET; i < VALID_LIMIT; i++) {
+			products.add(this.product);
 		}
 
 		when(productMapper.selectProducts(DEFAULT_OFFSET, LIMIT, CATEGORY_ID))
@@ -169,17 +164,6 @@ public class ProductServiceTest {
 	@DisplayName("아이디로 제품 조회 성공 테스트")
 	public void getProductByIdTest() {
 
-		// given
-		Product product = Product.builder()
-			.id(PRODUCT_ID)
-			.productCategoryId(1L)
-			.name("test")
-			.price(1000)
-			.imageUrl("test")
-			.description("test")
-			.abv(1.0)
-			.capacity(350)
-			.build();
 
 		when(productMapper.selectProductById(PRODUCT_ID)).thenReturn(Optional.ofNullable(product));
 
