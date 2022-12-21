@@ -16,12 +16,12 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 public class ProductMapperTest {
 
-    @Autowired private ProductMapper productMapper;
+	@Autowired
+	private ProductMapper productMapper;
 
 	@Test
 	@DisplayName("전체 제품 조회 테스트")
 	public void selectProductsTest() {
-
 		List<Product> products = productMapper.selectProducts(0, 1, null);
 
 		assertEquals(1L, products.get(0).getProductCategoryId());
@@ -42,19 +42,20 @@ public class ProductMapperTest {
 		}
 	}
 
-    @Test
-    @DisplayName("아이디로 제품 조회 테스트")
-    public void selectProductByIdTest() {
-        Optional<Product> product = productMapper.selectProductById(1L);
+	@Test
+	@DisplayName("아이디로 제품 조회 테스트")
+	public void selectProductByIdTest() {
+		Optional<Product> product = productMapper.selectProductById(1L);
 
 		assertTrue(product.isPresent());
 		assertEquals(1L, product.get().getId());
-    }
+	}
 
-    @Test
-    @DisplayName("아이디로 존재하지 않는 제품 조회시 빈 객체 반환")
-    public void selectProductByIdFailTest() {
-        Optional<Product> product = productMapper.selectProductById(1000L);
-        assertTrue(product.isEmpty());
-    }
+	@Test
+	@DisplayName("존재하지 않는 아이디로 제품 조회시 빈 객체 반환")
+	public void selectProductByIdFailTest() {
+		Optional<Product> product = productMapper.selectProductById(1000L);
+
+		assertTrue(product.isEmpty());
+	}
 }
