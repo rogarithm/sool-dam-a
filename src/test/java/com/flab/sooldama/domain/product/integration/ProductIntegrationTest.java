@@ -75,26 +75,26 @@ public class ProductIntegrationTest {
 			.andExpect(jsonPath("$[0].productCategoryId").value(1));
 	}
 
-    @Test
-    @DisplayName("아이디로 제품 조회 성공")
-    public void getProductTest() throws Exception {
+	@Test
+	@DisplayName("아이디로 제품 조회 성공")
+	public void getProductTest() throws Exception {
 		Long VALID_PRODUCT_ID = 1L;
 
-        this.mockMvc
+		this.mockMvc
 			.perform(get("/products/{PRODUCT_ID}", VALID_PRODUCT_ID)
 				.session(this.session))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.id").value(1));
-    }
+	}
 
-    @Test
-    @DisplayName("아이디로 제품 조회 실패")
-    public void getProductFailTest() throws Exception {
+	@Test
+	@DisplayName("아이디로 제품 조회 실패")
+	public void getProductFailTest() throws Exception {
 		Long INVALID_PRODUCT_ID = 1000L;
 
-        this.mockMvc
+		this.mockMvc
 			.perform(get("/products/{INVALID_PRODUCT_ID}", INVALID_PRODUCT_ID)
 				.session(this.session))
 			.andExpect(status().isNotFound());
-    }
+	}
 }
