@@ -1,8 +1,6 @@
 package com.flab.sooldama.domain.product.api;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,8 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.flab.sooldama.domain.product.dto.response.ProductResponse;
 import com.flab.sooldama.domain.product.exception.ProductNotFoundException;
 import com.flab.sooldama.domain.product.service.ProductService;
-import com.flab.sooldama.domain.product.exception.AuthenticationFailException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

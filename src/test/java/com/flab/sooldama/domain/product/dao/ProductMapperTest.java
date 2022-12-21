@@ -1,9 +1,9 @@
 package com.flab.sooldama.domain.product.dao;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.flab.sooldama.domain.product.domain.Product;
-import com.flab.sooldama.domain.product.exception.ProductNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
