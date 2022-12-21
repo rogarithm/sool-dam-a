@@ -51,7 +51,7 @@ public class ProductIntegrationTest {
 	}
 
 	@Test
-	@DisplayName("offset이 0 이하일 때 제품 조회 실패")
+	@DisplayName("요청 파라미터 값이 유효하지 않으면 제품 조회 실패")
 	public void getProductsFailTest() throws Exception {
 		Integer INVALID_OFFSET = -1;
 
