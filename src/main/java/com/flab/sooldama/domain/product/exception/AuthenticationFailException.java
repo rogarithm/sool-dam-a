@@ -1,4 +1,4 @@
-package com.flab.sooldama.global.exception;
+package com.flab.sooldama.domain.product.exception;
 
 public class AuthenticationFailException extends RuntimeException {
 

@@ -54,10 +54,6 @@ public class UserApi {
 	@PostMapping(path = "/login")
 	public ResponseEntity<Void> loginUser(@RequestBody LoginUserRequest request, HttpSession session) {
 
-		if (session.getAttribute(USER_EMAIL) != null) {
-			throw new UserAlreadyLoggedinException("이미 로그인한 사용자입니다");
-		}
-
 		userService.loginUser(request, session);
 
 		return ResponseEntity.status(HttpStatus.OK).build();

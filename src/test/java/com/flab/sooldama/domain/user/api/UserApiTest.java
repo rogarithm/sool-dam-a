@@ -19,7 +19,6 @@ import com.flab.sooldama.domain.user.exception.NoSuchUserException;
 import com.flab.sooldama.domain.user.exception.PasswordNotMatchException;
 import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
 import com.flab.sooldama.domain.user.service.UserService;
-import com.flab.sooldama.global.exception.AuthenticationFailException;
 import java.util.Iterator;
 import java.util.Set;
 import javax.servlet.http.HttpSession;
@@ -251,11 +250,6 @@ public class UserApiTest {
 				.accept(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isBadRequest());
-
-		// 확인
-		assertThrows(UserAlreadyLoggedinException.class, () -> {
-			userApi.loginUser(validRequest, session);
-		});
 	}
 
 	@Test
