@@ -143,7 +143,7 @@ public class ProductApiTest {
 			.andExpect(status().isOk());
 
 		// 행위 검증
-		verify(productService, times(1)).getProductById(PRODUCT_ID, this.session);
+		verify(productService).getProductById(PRODUCT_ID, this.session);
 	}
 
 	@Test
