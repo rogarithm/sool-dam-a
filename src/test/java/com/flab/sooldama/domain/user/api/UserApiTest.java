@@ -82,7 +82,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("회원가입 성공 테스트")
-	public void joinSuccessTest() throws Exception {
+	public void testJoinUserSuccess() throws Exception {
 		//Given 서비스를 거친 결과값
 		String content = objectMapper.writeValueAsString(
 			this.request);
@@ -98,7 +98,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("필수 정보를 입력하지 않으면 회원가입 처리 불가")
-	public void joinFailTest() throws Exception {
+	public void testJoinUserFail() throws Exception {
 		//Given 서비스를 거친 결과값
 		String content = objectMapper.writeValueAsString(
 			JoinUserRequest.builder()
@@ -116,7 +116,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("회원가입 중 이메일 중복 예외 발생시 Controller Advice가 처리")
-	public void duplicatedEmailExceptionHandledByControllerAdviceTest() throws Exception {
+	public void testJoinUserFaileWithDuplicatedEmailExceptionHandledByControllerAdvice() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		String content = objectMapper.writeValueAsString(this.request);
 
@@ -137,7 +137,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("유효하지 않은 이메일 주소일 경우")
-	public void checkInvalidEmail() {
+	public void testJoinUserDoEmailValidation() {
 		String invalidEmail = "sehoon@fmaildotcom";
 		String messageForInvalidEmail = "이메일 형식에 맞지 않습니다";
 
@@ -161,7 +161,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("회원가입되지 않은 이메일로 로그인 시 로그인 실패")
-	public void loginFailEmailNotFound() throws Exception {
+	public void testLoginUserFailWhenEmailNotFound() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		String yetJoinedUserEmail = "yet-joined@fmail.com";
 
@@ -196,7 +196,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("등록된 사용자이더라도 비밀번호 틀리면 로그인 불가")
-	public void loginFailPasswordNotMatch() throws Exception {
+	public void testLoginUserFailWhenPasswordNotMatch() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		String wrongPassword = "q1w2e3!";
 
@@ -231,7 +231,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("중복으로 로그인할 수 없다")
-	public void cannotDoDuplicatelogin() throws Exception {
+	public void testLoginUserFailWhenSameUserTryLoginTwice() throws Exception {
 		// 테스트 데이터
 		LoginUserRequest validRequest = LoginUserRequest.builder()
 			.email(this.request.getEmail())
@@ -254,7 +254,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("로그인 성공 테스트")
-	public void loginSuccess() throws Exception {
+	public void testLoginUserSuccess() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		LoginUserRequest validRequest = LoginUserRequest.builder()
 			.email(this.request.getEmail())
@@ -283,7 +283,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("로그아웃 실패 테스트")
-	public void logoutFail() throws Exception {
+	public void testLogoutUserFailWhenUserDidNotLogin() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("USER_EMAIL", null);
@@ -304,7 +304,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("로그아웃 성공 테스트")
-	public void logoutSuccess() throws Exception {
+	public void testLogoutUserSuccess() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		LoginUserRequest validRequest = LoginUserRequest.builder()
 			.email(this.request.getEmail())
