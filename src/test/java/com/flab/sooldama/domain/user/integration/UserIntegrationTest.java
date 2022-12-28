@@ -67,7 +67,7 @@ public class UserIntegrationTest {
 
 	@Test
 	@DisplayName("회원가입되지 않은 이메일로 로그인 시 로그인 실패")
-	public void loginFailEmailNotFound() throws Exception {
+	public void testLoginUserFailWithUnregisteredEmail() throws Exception {
 		// 테스트 데이터
 		LoginUserRequest invalidRequest = LoginUserRequest.builder()
 			.email("yet-joined@fmail.com")
@@ -89,7 +89,7 @@ public class UserIntegrationTest {
 
 	@Test
 	@DisplayName("등록된 사용자이더라도 비밀번호 틀리면 로그인 불가")
-	public void loginFailPasswordNotMatch() throws Exception {
+	public void testLoginUserFailWhenPasswordNotMatch() throws Exception {
 		// 테스트 데이터
 		LoginUserRequest invalidRequest = LoginUserRequest.builder()
 			.email("joined@fmail.com")
@@ -111,7 +111,7 @@ public class UserIntegrationTest {
 
 	@Test
 	@DisplayName("로그인 성공 테스트")
-	public void loginSuccessTest() throws Exception {
+	public void testLoginUserSuccess() throws Exception {
 		// 테스트 데이터
 		LoginUserRequest validRequest = LoginUserRequest.builder()
 			.email("joined@fmail.com")
@@ -133,7 +133,7 @@ public class UserIntegrationTest {
 
 	@Test
 	@DisplayName("로그아웃은 로그인으로 생성된 세션이 있을 경우 성공한다")
-	public void logoutSuccess() throws Exception {
+	public void testLogoutUserSuccess() throws Exception {
 		// 테스트 데이터
 		this.session.setAttribute("USER_EMAIL", "test2@gamil.com");
 
@@ -148,7 +148,7 @@ public class UserIntegrationTest {
 
 	@Test
 	@DisplayName("로그인한 상태가 아니라면 로그아웃에 실패한다")
-	public void logoutFail() throws Exception {
+	public void testLogoutUserFailWhenUserDidNotLogin() throws Exception {
 
 		mockMvc.perform(post("/users/logout")
 				.contentType(MediaType.APPLICATION_JSON)
