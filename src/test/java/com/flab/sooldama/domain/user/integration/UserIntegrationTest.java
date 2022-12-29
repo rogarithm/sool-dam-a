@@ -111,7 +111,7 @@ public class UserIntegrationTest {
 
 	@Test
 	@DisplayName("로그인 성공 테스트")
-	public void testLoginUserSuccess() throws Exception {
+	public void testLoginUser() throws Exception {
 		// 테스트 데이터
 		LoginUserRequest validRequest = LoginUserRequest.builder()
 			.email("joined@fmail.com")
@@ -133,7 +133,7 @@ public class UserIntegrationTest {
 
 	@Test
 	@DisplayName("로그아웃은 로그인으로 생성된 세션이 있을 경우 성공한다")
-	public void testLogoutUserSuccess() throws Exception {
+	public void testLogoutUser() throws Exception {
 		// 테스트 데이터
 		this.session.setAttribute("USER_EMAIL", "test2@gamil.com");
 

@@ -82,7 +82,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("회원가입 성공 테스트")
-	public void testJoinUserSuccess() throws Exception {
+	public void testJoinUser() throws Exception {
 		//Given 서비스를 거친 결과값
 		String content = objectMapper.writeValueAsString(
 			this.request);
@@ -254,7 +254,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("로그인 성공 테스트")
-	public void testLoginUserSuccess() throws Exception {
+	public void testLoginUser() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		LoginUserRequest validRequest = LoginUserRequest.builder()
 			.email(this.request.getEmail())
@@ -304,7 +304,7 @@ public class UserApiTest {
 
 	@Test
 	@DisplayName("로그아웃 성공 테스트")
-	public void testLogoutUserSuccess() throws Exception {
+	public void testLogoutUser() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		LoginUserRequest validRequest = LoginUserRequest.builder()
 			.email(this.request.getEmail())

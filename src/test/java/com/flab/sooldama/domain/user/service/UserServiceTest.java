@@ -244,7 +244,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("로그인 성공 테스트")
-	public void testLoginUserSuccess()
+	public void testLoginUser()
 		throws InvocationTargetException, IllegalAccessException {
 		// 테스트 데이터 및 동작 정의
 		String validPassword = this.request.getPassword();
@@ -280,7 +280,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("로그인한 사용자의 세션 정보가 있으면 로그아웃할 수 있다")
-	public void testLogoutUserSuccess() {
+	public void testLogoutUser() {
 		// 테스트 데이터 및 동작 정의
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("USER_EMAIL", this.request.getEmail());
