@@ -70,7 +70,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("사용자가 회원가입하면 DB에 회원정보가 추가되나")
-	public void userInfoAddedOnDB() {
+	public void testInsertUserAddUserInfoOnDB() {
 		// 테스트 데이터 및 동작 정의
 		User user = User.builder()
 			.id(1L)
@@ -109,8 +109,8 @@ class UserServiceTest {
 	}
 
 	@Test
-	@DisplayName("없는 아이디로 사용자를 조회")
-	public void findUserWithNonExistingId() {
+	@DisplayName("등록되지 않은 아이디로 사용자를 조회")
+	public void testFindUserByIdFailWithUnregisteredId() {
 		// 테스트 데이터 및 동작 정의
 		Long wrongId = -1L;
 		when(userMapper.findUserById(wrongId)).thenReturn(Optional.ofNullable(null));
@@ -126,7 +126,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("입력된 이메일 주소가 이미 있을 경우")
-	public void checkDuplicateEmailExists() {
+	public void testInsertUserChecksIfEmailAlreadyExists() {
 		// 테스트 데이터 및 동작 정의
 		when(userMapper.findUserByEmail(any(String.class))).thenReturn(
 			Optional.of(this.request.toUser()));
@@ -142,7 +142,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("회원가입 시 입력한 비밀번호는 암호화되어 입력 당시와 달라진다")
-	public void encryptPasswordSuccess()
+	public void testInsertUserDoesEncryptPassword()
 		throws InvocationTargetException, IllegalAccessException {
 		// 테스트 데이터 및 동작 정의
 		String encryptedPassword = (String) this.passwordEncryptMethod.invoke(
@@ -186,7 +186,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("회원가입되지 않은 이메일로 로그인 시 로그인 실패")
-	public void loginFailEmailNotFound() throws Exception {
+	public void testLoginUserFailWithUnregisteredEmail() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		LoginUserRequest invalidRequest = LoginUserRequest.builder()
 			.email("yet-joined@fmail.com")
@@ -207,7 +207,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("등록된 사용자이더라도 로그인 시 입력한 비밀번호를 암호화했을 때 DB에 저장된 값과 일치하지 않으면 로그인 불가")
-	public void loginFailPasswordNotMatch() throws Exception {
+	public void testLoginUserFailWithInvalidPassword() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		LoginUserRequest invalidRequest = LoginUserRequest.builder()
 			.email("joined@fmail.com")
@@ -244,7 +244,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("로그인 성공 테스트")
-	public void loginSuccess()
+	public void testLoginUser()
 		throws InvocationTargetException, IllegalAccessException {
 		// 테스트 데이터 및 동작 정의
 		String validPassword = this.request.getPassword();
@@ -280,7 +280,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("로그인한 사용자의 세션 정보가 있으면 로그아웃할 수 있다")
-	public void logoutSuccess() {
+	public void testLogoutUser() {
 		// 테스트 데이터 및 동작 정의
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("USER_EMAIL", this.request.getEmail());

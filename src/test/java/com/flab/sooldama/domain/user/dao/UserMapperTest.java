@@ -24,7 +24,7 @@ public class UserMapperTest {
 
 	@Test
 	@DisplayName("필수 정보 넣지 않을 경우 insertUser 실패")
-	public void failInsertUser() {
+	public void testInsertUserFailWhenInputIsInsufficient() {
 		User user = User.builder()
 			.email("sehoon@fmail.com")
 			.name("sehoon gim")
@@ -39,7 +39,7 @@ public class UserMapperTest {
 
 	@Test
 	@DisplayName("id로 사용자 검색 시 사용자가 없을 경우 Optional.empty 반환")
-	public void findNonExistsUserById() {
+	public void testFindUserByIdWhenIdDoesNotExists() {
 		Long wrongId = -1L;
 
 		Assertions.assertThat(userMapper.findUserById(wrongId)).isEmpty();
@@ -47,7 +47,7 @@ public class UserMapperTest {
 
 	@Test
 	@DisplayName("email로 사용자 검색 시 사용자가 없을 경우 Optional.empty 반환")
-	public void findNonExistsUserByEmail() {
+	public void testfindUserByEmailWhenEmailDoesNotExists() {
 		String wrongEmail = "wrong@email.com";
 
 		Assertions.assertThat(userMapper.findUserByEmail(wrongEmail)).isEmpty();
@@ -55,7 +55,7 @@ public class UserMapperTest {
 
 	@Test
 	@DisplayName("UserMapper 클래스와 UserMapper.xml의 insertUser 반환 타입 불일치 오류 확인")
-	public void insertUserReturnTypeNotMatched() {
+	public void testInsertUserReturnTypeMatchesReturnTypeOfXMLMapper() {
 		User user = User.builder()
 			.email("sehoon@fmail.com")
 			.password("abracadabra")

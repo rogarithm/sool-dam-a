@@ -25,9 +25,9 @@ public class ProductIntegrationTest {
 	@Autowired
 	private MockHttpSession session;
 
-	private static final String SESSION_KEY = "USER_EMAIL";
+	private static final String SESSION_ATTR_KEY_FOR_AUTH = "USER_EMAIL";
 
-	private static final String SESSION_VALUE = "test@tester.com";
+	private static final String SESSION_ATTR_VALUE_FOR_AUTH = "test@tester.com";
 
 	private static final Integer DEFAULT_OFFSET = 0;
 
@@ -36,12 +36,12 @@ public class ProductIntegrationTest {
 	@BeforeEach
 	public void setUp() {
 		this.session = new MockHttpSession();
-		this.session.setAttribute(SESSION_KEY, SESSION_VALUE);
+		this.session.setAttribute(SESSION_ATTR_KEY_FOR_AUTH, SESSION_ATTR_VALUE_FOR_AUTH);
 	}
 
 	@Test
 	@DisplayName("제품 조회 성공 테스트")
-	public void getProductsTest() throws Exception {
+	public void testGetProducts() throws Exception {
 		this.mockMvc
 			.perform(get("/products")
 				.param("offset", DEFAULT_OFFSET.toString())
@@ -51,8 +51,8 @@ public class ProductIntegrationTest {
 	}
 
 	@Test
-	@DisplayName("offset이 0 이하일 때 제품 조회 실패")
-	public void getProductsFailTest() throws Exception {
+	@DisplayName("요청 파라미터 값이 유효하지 않으면 제품 조회 실패")
+	public void testGetProductsFailWithInvalidParameter() throws Exception {
 		Integer INVALID_OFFSET = -1;
 
 		this.mockMvc
@@ -64,7 +64,7 @@ public class ProductIntegrationTest {
 
 	@Test
 	@DisplayName("categoryId를 사용하여 categoryId에 알맞는 제품 조회 성공")
-	public void getProductsByCategoryIdTest() throws Exception {
+	public void testGetProductsWithCategoryId() throws Exception {
 		Long VALID_CATEGORY_ID = 1L;
 
 		this.mockMvc
@@ -75,26 +75,26 @@ public class ProductIntegrationTest {
 			.andExpect(jsonPath("$[0].productCategoryId").value(1));
 	}
 
-    @Test
-    @DisplayName("아이디로 제품 조회 성공")
-    public void getProductTest() throws Exception {
+	@Test
+	@DisplayName("아이디로 제품 조회 성공")
+	public void testGetProductWithProductId() throws Exception {
 		Long VALID_PRODUCT_ID = 1L;
 
-        this.mockMvc
+		this.mockMvc
 			.perform(get("/products/{PRODUCT_ID}", VALID_PRODUCT_ID)
 				.session(this.session))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.id").value(1));
-    }
+	}
 
-    @Test
-    @DisplayName("아이디로 제품 조회 실패")
-    public void getProductFailTest() throws Exception {
+	@Test
+	@DisplayName("아이디로 제품 조회 실패")
+	public void testGetProductFailWithInvalidProductId() throws Exception {
 		Long INVALID_PRODUCT_ID = 1000L;
 
-        this.mockMvc
+		this.mockMvc
 			.perform(get("/products/{INVALID_PRODUCT_ID}", INVALID_PRODUCT_ID)
 				.session(this.session))
 			.andExpect(status().isNotFound());
-    }
+	}
 }

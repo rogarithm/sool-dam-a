@@ -1,8 +1,6 @@
 package com.flab.sooldama.domain.product.api;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,8 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.flab.sooldama.domain.product.dto.response.ProductResponse;
 import com.flab.sooldama.domain.product.exception.ProductNotFoundException;
 import com.flab.sooldama.domain.product.service.ProductService;
-import com.flab.sooldama.domain.product.exception.AuthenticationFailException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,9 +45,9 @@ public class ProductApiTest {
 
 	private static final Long DEFAULT_CATEGORY_ID = null;
 
-	private static final String SESSION_KEY = "USER_EMAIL";
+	private static final String SESSION_ATTR_KEY_FOR_AUTH = "USER_EMAIL";
 
-	private static final String SESSION_VALUE = "test@tester.com";
+	private static final String SESSION_ATTR_VALUE_FOR_AUTH = "test@tester.com";
 
 	@BeforeEach
 	public void setUp() {
@@ -84,17 +82,15 @@ public class ProductApiTest {
 			.capacity(500)
 			.build();
 		this.products = new ArrayList<ProductResponse>();
-		products.add(product1);
-		products.add(product2);
-		products.add(product3);
+		products.addAll(Arrays.asList(product1, product2, product3));
 
 		this.session = new MockHttpSession();
-		this.session.setAttribute(SESSION_KEY, SESSION_VALUE);
+		this.session.setAttribute(SESSION_ATTR_KEY_FOR_AUTH, SESSION_ATTR_VALUE_FOR_AUTH);
 	}
 
 	@Test
 	@DisplayName("한 번에 여러 제품 조회 시 기본값 적용")
-	public void getProductsTest() throws Exception {
+	public void testGetProductsWithDefaultParameters() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		when(productService.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID,
 			this.session))
@@ -110,13 +106,13 @@ public class ProductApiTest {
 			.andExpect(status().isOk());
 
 		// 행위 검증
-		verify(productService, times(1))
-			.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID, this.session);
+		verify(productService).getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID,
+			this.session);
 	}
 
 	@Test
-	@DisplayName("offset이 0보다 작으면 유효성 검증 실패해서 service로 요청 전달 X")
-	public void getProductsFailTest() throws Exception {
+	@DisplayName("컨트롤러는 요청 파라미터 값이 유효한지 검증한다")
+	public void testGetProductsFailWithInvalidParameter() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		Integer INVALID_OFFSET = -1;
 
@@ -132,11 +128,12 @@ public class ProductApiTest {
 
 	@Test
 	@DisplayName("아이디로 제품 조회 성공 테스트")
-	public void getProductTest() throws Exception {
+	public void testGetProductWithProductId() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		Long PRODUCT_ID = 1L;
 
-		when(productService.getProductById(PRODUCT_ID, this.session)).thenReturn(this.products.get(0));
+		when(productService.getProductById(PRODUCT_ID, this.session)).thenReturn(
+			this.products.get(0));
 
 		// 실행
 		this.mockMvc
@@ -146,12 +143,12 @@ public class ProductApiTest {
 			.andExpect(status().isOk());
 
 		// 행위 검증
-		verify(productService, times(1)).getProductById(PRODUCT_ID, this.session);
+		verify(productService).getProductById(PRODUCT_ID, this.session);
 	}
 
 	@Test
-	@DisplayName("존재하지 않는 제품 아이디로 제품 조회 시 실패")
-	public void getProductByNonExistingId() throws Exception {
+	@DisplayName("존재하지 않는 제품 아이디로 제품 조회 불가")
+	public void testGetProductFailWhenIdNotExists() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		Long NONEXISTING_ID = -1L;
 
@@ -166,12 +163,12 @@ public class ProductApiTest {
 			.andExpect(status().isNotFound());
 
 		// 행위 검증
-		verify(productService, times(1)).getProductById(NONEXISTING_ID, this.session);
+		verify(productService).getProductById(NONEXISTING_ID, this.session);
 	}
 
 	@Test
-	@DisplayName("로그인하지 않고 요청 시 인증 실패하고 예외 발생")
-	public void getProductNoLogin() throws Exception {
+	@DisplayName("로그인해야 제품을 조회할 수 있다")
+	public void testGetProductFailWhenUserDidNotLogin() throws Exception {
 		// 테스트 데이터
 		Long PRODUCT_ID = 1L;
 		MockHttpSession sessionNoLoginInfo = new MockHttpSession();

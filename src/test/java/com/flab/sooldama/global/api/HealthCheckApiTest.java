@@ -17,7 +17,7 @@ class HealthCheckApiTest {
 
 	@Test
 	@DisplayName("로드 밸런서 health check 테스트")
-	public void healthCheckSuccessTest() throws Exception {
+	public void testHealthCheck() throws Exception {
 		this.mockMvc
 			.perform(get("/healthcheck"))
 			.andExpect(status().isOk());
