@@ -77,7 +77,7 @@ public class ProductServiceTest {
 
 	@Test
 	@DisplayName("제품이 존재할 때 전체 제품 조회 성공 테스트 - offeet, limit에 알맞는 리스트를 반환")
-	public void getProductsTest() {
+	public void testGetProducts() {
 
 		// given
 		List<Product> products = new ArrayList<>();
@@ -100,7 +100,7 @@ public class ProductServiceTest {
 
 	@Test
 	@DisplayName("제품이 존재하지 않을 때 전체 제품 조회 성공 테스트 - 비어있는 리스트를 반환")
-	public void getProductsEmptyTest() {
+	public void testGetProductsReturnsEmptyListWhenProductNotExists() {
 
 		// given
 		List<Product> products = new ArrayList<>();
@@ -118,7 +118,7 @@ public class ProductServiceTest {
 
 	@Test
 	@DisplayName("카테고리별 제품이 존재할 때 조회 성공 테스트 - offeet, limit, categoryId에 알맞는 리스트를 반환")
-	public void getProductsByCategoryIdTest() {
+	public void testGetProductsWithCategoryId() {
 
 		// given
 		List<Product> products = new ArrayList<>();
@@ -146,7 +146,7 @@ public class ProductServiceTest {
 
 	@Test
 	@DisplayName("카테고리별 제품이 존재하지 않을 때 조회 성공 테스트 - 비어있는 리스트를 반환")
-	public void getProductsByCategoryIdEmptyTest() {
+	public void testGetProductsReturnsEmptyListWhenNoProductExistsForGivenCategoryId() {
 
 		// given
 		List<Product> products = new ArrayList<>();
@@ -165,8 +165,7 @@ public class ProductServiceTest {
 
 	@Test
 	@DisplayName("아이디로 제품 조회 성공 테스트")
-	public void getProductByIdTest() {
-
+	public void testGetProductById() {
 
 		// given
 		when(productMapper.selectProductById(VALID_PRODUCT_ID))
@@ -184,7 +183,7 @@ public class ProductServiceTest {
 
 	@Test
 	@DisplayName("존재하지 않는 아이디로 제품을 조회할 수 없다")
-	public void getProductByIdFailTest() {
+	public void testGetProductByIdFailWhenIdNotExists() {
 
 		// given
 		Long INVALID_PRODUCT_ID = 1000L;
