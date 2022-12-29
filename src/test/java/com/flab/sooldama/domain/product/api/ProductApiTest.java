@@ -90,7 +90,7 @@ public class ProductApiTest {
 
 	@Test
 	@DisplayName("한 번에 여러 제품 조회 시 기본값 적용")
-	public void getProductsTest() throws Exception {
+	public void testGetProductsWithDefaultParameters() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		when(productService.getProducts(DEFAULT_OFFSET, DEFAULT_LIMIT, DEFAULT_CATEGORY_ID,
 			this.session))
@@ -112,7 +112,7 @@ public class ProductApiTest {
 
 	@Test
 	@DisplayName("컨트롤러는 요청 파라미터 값이 유효한지 검증한다")
-	public void getProductsFailTest() throws Exception {
+	public void testGetProductsFailWithInvalidParameter() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		Integer INVALID_OFFSET = -1;
 
@@ -128,7 +128,7 @@ public class ProductApiTest {
 
 	@Test
 	@DisplayName("아이디로 제품 조회 성공 테스트")
-	public void getProductTest() throws Exception {
+	public void testGetProductWithProductId() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		Long PRODUCT_ID = 1L;
 
@@ -148,7 +148,7 @@ public class ProductApiTest {
 
 	@Test
 	@DisplayName("존재하지 않는 제품 아이디로 제품 조회 불가")
-	public void getProductByNonExistingId() throws Exception {
+	public void testGetProductFailWhenIdNotExists() throws Exception {
 		// 테스트 데이터 및 동작 정의
 		Long NONEXISTING_ID = -1L;
 
@@ -168,7 +168,7 @@ public class ProductApiTest {
 
 	@Test
 	@DisplayName("로그인해야 제품을 조회할 수 있다")
-	public void getProductNoLogin() throws Exception {
+	public void testGetProductFailWhenUserDidNotLogin() throws Exception {
 		// 테스트 데이터
 		Long PRODUCT_ID = 1L;
 		MockHttpSession sessionNoLoginInfo = new MockHttpSession();
