@@ -41,7 +41,7 @@ public class ProductIntegrationTest {
 
 	@Test
 	@DisplayName("제품 조회 성공 테스트")
-	public void getProductsTest() throws Exception {
+	public void testGetProducts() throws Exception {
 		this.mockMvc
 			.perform(get("/products")
 				.param("offset", DEFAULT_OFFSET.toString())
@@ -52,7 +52,7 @@ public class ProductIntegrationTest {
 
 	@Test
 	@DisplayName("요청 파라미터 값이 유효하지 않으면 제품 조회 실패")
-	public void getProductsFailTest() throws Exception {
+	public void testGetProductsFailWithInvalidParameter() throws Exception {
 		Integer INVALID_OFFSET = -1;
 
 		this.mockMvc
@@ -64,7 +64,7 @@ public class ProductIntegrationTest {
 
 	@Test
 	@DisplayName("categoryId를 사용하여 categoryId에 알맞는 제품 조회 성공")
-	public void getProductsByCategoryIdTest() throws Exception {
+	public void testGetProductsWithCategoryId() throws Exception {
 		Long VALID_CATEGORY_ID = 1L;
 
 		this.mockMvc
@@ -77,7 +77,7 @@ public class ProductIntegrationTest {
 
 	@Test
 	@DisplayName("아이디로 제품 조회 성공")
-	public void getProductTest() throws Exception {
+	public void testGetProductWithProductId() throws Exception {
 		Long VALID_PRODUCT_ID = 1L;
 
 		this.mockMvc
@@ -89,7 +89,7 @@ public class ProductIntegrationTest {
 
 	@Test
 	@DisplayName("아이디로 제품 조회 실패")
-	public void getProductFailTest() throws Exception {
+	public void testGetProductFailWithInvalidProductId() throws Exception {
 		Long INVALID_PRODUCT_ID = 1000L;
 
 		this.mockMvc
