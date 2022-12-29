@@ -21,7 +21,7 @@ public class ProductMapperTest {
 
 	@Test
 	@DisplayName("전체 제품 조회 테스트")
-	public void selectProductsTest() {
+	public void testSelectProducts() {
 		List<Product> products = productMapper.selectProducts(0, 1, null);
 
 		assertEquals(1L, products.get(0).getProductCategoryId());
@@ -34,7 +34,7 @@ public class ProductMapperTest {
 
 	@Test
 	@DisplayName("카테고리별 제품 조회 테스트")
-	public void selectProductsByCategoryIdTest() {
+	public void testSelectProductsWithCategoryId() {
 		List<Product> products = productMapper.selectProducts(0, 1, 1L);
 
 		for (Product product : products) {
@@ -44,7 +44,7 @@ public class ProductMapperTest {
 
 	@Test
 	@DisplayName("아이디로 제품 조회 테스트")
-	public void selectProductByIdTest() {
+	public void testSelectProductById() {
 		Optional<Product> product = productMapper.selectProductById(1L);
 
 		assertTrue(product.isPresent());
@@ -53,7 +53,7 @@ public class ProductMapperTest {
 
 	@Test
 	@DisplayName("존재하지 않는 아이디로 제품 조회시 빈 객체 반환")
-	public void selectProductByIdFailTest() {
+	public void testSelectProductByIdFailWhenIdNotExists() {
 		Optional<Product> product = productMapper.selectProductById(1000L);
 
 		assertTrue(product.isEmpty());
