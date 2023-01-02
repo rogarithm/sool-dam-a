@@ -4,7 +4,6 @@ import com.flab.sooldama.domain.user.dto.request.JoinUserRequest;
 import com.flab.sooldama.domain.user.dto.request.LoginUserRequest;
 import com.flab.sooldama.domain.user.dto.response.JoinUserResponse;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;
-import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
 import com.flab.sooldama.domain.user.service.UserService;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
