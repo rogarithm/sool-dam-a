@@ -8,6 +8,7 @@ import com.flab.sooldama.domain.user.dto.response.JoinUserResponse;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;
 import com.flab.sooldama.domain.user.exception.DuplicateEmailExistsException;
 import com.flab.sooldama.domain.user.exception.PasswordNotMatchException;
+import com.flab.sooldama.global.auth.AuthService;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
 	private final UserMapper userMapper;
-	private static final String USER_EMAIL = "USER_EMAIL";
+	private final AuthService authService;
 	private static final String ENCRYPTION_ALGORITHM = "SHA-256";
 
 	public JoinUserResponse insertUser(JoinUserRequest request) {
@@ -85,7 +86,7 @@ public class UserService {
 			throw new PasswordNotMatchException("비밀번호가 다릅니다");
 		}
 
-		session.setAttribute(USER_EMAIL, request.getEmail());
+		session.setAttribute(authService.getAuthSessionKey(), request.getEmail());
 	}
 
 	public void logoutUser(HttpSession session) {
