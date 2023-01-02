@@ -16,6 +16,7 @@ import com.flab.sooldama.domain.user.dto.response.JoinUserResponse;
 import com.flab.sooldama.domain.user.exception.DuplicateEmailExistsException;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;
 import com.flab.sooldama.domain.user.exception.PasswordNotMatchException;
+import com.flab.sooldama.global.auth.AuthService;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
@@ -44,6 +45,9 @@ class UserServiceTest {
 	@Mock
 	private UserMapper userMapper;
 
+	@Mock
+	private AuthService authService;
+
 	private JoinUserRequest request;
 
 	private UserService passwordEncryptor;
@@ -61,7 +65,7 @@ class UserServiceTest {
 			.isAdult(true)
 			.build();
 
-		this.passwordEncryptor = new UserService(userMapper);
+		this.passwordEncryptor = new UserService(userMapper, authService);
 		this.passwordEncryptMethod = passwordEncryptor.getClass()
 			.getDeclaredMethod("encryptPassword", String.class);
 		this.passwordEncryptMethod.setAccessible(true);
@@ -270,6 +274,7 @@ class UserServiceTest {
 		MockHttpSession session = new MockHttpSession();
 
 		when(userMapper.findUserByEmail(any(String.class))).thenReturn(Optional.of(validUser));
+		when(authService.getAuthSessionKey()).thenReturn("USER_EMAIL");
 
 		// 실행
 		userService.loginUser(validRequest, session);

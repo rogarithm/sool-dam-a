@@ -9,6 +9,7 @@ import com.flab.sooldama.domain.user.dao.UserMapper;
 import com.flab.sooldama.domain.user.domain.User;
 import com.flab.sooldama.domain.user.dto.request.LoginUserRequest;
 import com.flab.sooldama.domain.user.service.UserService;
+import com.flab.sooldama.global.auth.AuthService;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +41,9 @@ public class UserIntegrationTest {
 	private UserMapper userMapper;
 
 	@Autowired
+	private AuthService authService;
+
+	@Autowired
 	private MockHttpSession session;
 
 	@BeforeEach
@@ -48,7 +52,7 @@ public class UserIntegrationTest {
 		userMapper.deleteAllUsers();
 		String validPassword = "q1w2e3!";
 
-		UserService passwordEncryptor = new UserService(userMapper);
+		UserService passwordEncryptor = new UserService(userMapper, authService);
 		Method method = passwordEncryptor.getClass().getDeclaredMethod("encryptPassword", String.class);
 		method.setAccessible(true);
 
