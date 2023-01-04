@@ -33,8 +33,12 @@ import org.mockito.stubbing.Answer;
 import org.springframework.mock.web.MockHttpSession;
 
 /*
- * @ExtendWith 어노테이션은 테스트에서 사용할 클래스를 명시합니다. @ExtendWith(MockitoExtension.class)를 사용함으로써
- * openMocks 등의 메소드를 생략할 수 있습니다.
+ * @ExtendWith
+ * @BeforeEach가 매 테스트 메서드 전에 실행되는 것 같이, 테스트 메서드를 실행하기 전과 후에 실행되는 여러 단계가 있습니다.
+ * @ExtendWith는 JUnit 테스트의 생애주기에 속하는 단계에 특정 동작을 실행하도록 정해놓은 Extension 클래스를 명시합니다.
+ * MockitoExtension는 Mockito 라이브러리용 Extension 클래스로, openMocks 등의 메소드를 생략할 수 있도록 하는 등의
+ * 동작을 정의합니다. @ExtendWith(MockitoExtension)를 붙인 테스트 클래스는 MockitoExtension 클래스가 정의한 동작을
+ * 사용할 수 있게 됩니다.
  */
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
