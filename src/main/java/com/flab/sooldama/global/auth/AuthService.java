@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 @Getter
+@RequiredArgsConstructor
 public class AuthService {
 
 	private final String authSessionKey = "USER_EMAIL";
