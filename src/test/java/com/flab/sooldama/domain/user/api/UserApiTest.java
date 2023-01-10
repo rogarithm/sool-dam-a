@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flab.sooldama.domain.product.exception.AuthenticationFailException;
 import com.flab.sooldama.domain.user.dto.request.JoinUserRequest;
 import com.flab.sooldama.domain.user.dto.request.LoginUserRequest;
 import com.flab.sooldama.domain.user.exception.DuplicateEmailExistsException;
@@ -297,9 +299,7 @@ public class UserApiTest {
 			.andExpect(status().isBadRequest());
 
 		// 행위 검증
-		assertThrows(NoSuchUserException.class, () -> {
-			userApi.logoutUser(session);
-		});
+		verify(userService, never()).logoutUser(any(HttpSession.class));
 	}
 
 	@Test
