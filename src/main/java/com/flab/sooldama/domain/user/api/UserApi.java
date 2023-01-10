@@ -26,8 +26,6 @@ public class UserApi {
 
 	private final UserService userService;
 
-	private static final String USER_EMAIL = "USER_EMAIL";
-
     /*
     @GetMapping 어노테이션은 HTTP GET 요청을 처리하는 메서드를 맵핑(@RequestMapping) 하는 어노테이션 입니다.
     Url 에 따라서 어떤 정보를 보여줄지 결정합니다.
@@ -60,10 +58,6 @@ public class UserApi {
 
 	@PostMapping(path = "/logout")
 	public ResponseEntity<Void> logoutUser(HttpSession session) {
-
-		if (session.getAttribute(USER_EMAIL) == null) {
-			throw new NoSuchUserException("로그인한 사용자가 아닙니다");
-		}
 
 		userService.logoutUser(session);
 
