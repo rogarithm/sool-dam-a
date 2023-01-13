@@ -252,6 +252,9 @@ public class UserApiTest {
 				.accept(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isBadRequest());
+
+		// 행위 검증
+		verify(userService, never()).loginUser(any(LoginUserRequest.class), any(HttpSession.class));
 	}
 
 	@Test
