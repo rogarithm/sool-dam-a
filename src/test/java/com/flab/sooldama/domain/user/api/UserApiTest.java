@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,7 +18,6 @@ import com.flab.sooldama.domain.user.dto.request.LoginUserRequest;
 import com.flab.sooldama.domain.user.exception.DuplicateEmailExistsException;
 import com.flab.sooldama.domain.user.exception.NoSuchUserException;
 import com.flab.sooldama.domain.user.exception.PasswordNotMatchException;
-import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
 import com.flab.sooldama.domain.user.service.UserService;
 import java.util.Iterator;
 import java.util.Set;
@@ -250,6 +250,9 @@ public class UserApiTest {
 				.accept(MediaType.APPLICATION_JSON))
 			.andDo(print())
 			.andExpect(status().isBadRequest());
+
+		// 행위 검증
+		verify(userService, never()).loginUser(any(LoginUserRequest.class), any(HttpSession.class));
 	}
 
 	@Test
@@ -297,9 +300,7 @@ public class UserApiTest {
 			.andExpect(status().isBadRequest());
 
 		// 행위 검증
-		assertThrows(NoSuchUserException.class, () -> {
-			userApi.logoutUser(session);
-		});
+		verify(userService, never()).logoutUser(any(HttpSession.class));
 	}
 
 	@Test

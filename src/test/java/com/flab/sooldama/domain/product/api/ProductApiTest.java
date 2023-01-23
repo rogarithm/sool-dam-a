@@ -1,6 +1,8 @@
 package com.flab.sooldama.domain.product.api;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -13,6 +15,7 @@ import com.flab.sooldama.domain.product.service.ProductService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -179,5 +182,8 @@ public class ProductApiTest {
 				.session(sessionNoLoginInfo))
 			.andDo(print())
 			.andExpect(status().isBadRequest());
+
+		// 행위 검증
+		verify(productService, never()).getProductById(any(Long.class), any(HttpSession.class));
 	}
 }

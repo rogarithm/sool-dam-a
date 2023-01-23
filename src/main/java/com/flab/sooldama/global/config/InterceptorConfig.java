@@ -1,13 +1,17 @@
-package com.flab.sooldama.global.auth;
+package com.flab.sooldama.global.config;
 
+import com.flab.sooldama.global.auth.AuthInterceptor;
+import com.flab.sooldama.global.auth.LoginInterceptor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
-public class WebConfig implements WebMvcConfigurer {
+@ComponentScan(basePackages = {"com.flab.sooldama.global.auth"})
+public class InterceptorConfig implements WebMvcConfigurer {
 
 	private final AuthInterceptor authInterceptor;
 
@@ -16,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(authInterceptor)
-			.addPathPatterns("/products/*");
+			.addPathPatterns("/products/*", "/users/logout");
 		registry.addInterceptor(loginInterceptor)
 			.addPathPatterns("/users/login");
 	}
