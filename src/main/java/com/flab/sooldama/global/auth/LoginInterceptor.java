@@ -1,6 +1,6 @@
 package com.flab.sooldama.global.auth;
 
-import com.flab.sooldama.domain.user.exception.UserAlreadyLoggedinException;
+import com.flab.sooldama.global.exception.AuthenticationFailException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -20,7 +20,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 		HttpSession session = request.getSession();
 
 		if (session.getAttribute(authService.getAuthSessionKey()) != null) {
-			throw new UserAlreadyLoggedinException("이미 로그인한 사용자입니다");
+			throw new AuthenticationFailException("이미 로그인한 사용자입니다");
 		}
 
 		return true;
