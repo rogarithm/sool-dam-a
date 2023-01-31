@@ -31,3 +31,6 @@
 
 ## 프로젝트 구조도
 ![sooldama-project-structure3](https://user-images.githubusercontent.com/30012466/205631699-cfca03e8-6750-4821-871a-72c0f68ee88c.png)
+
+## ETC
+[이전에 진행한 PR 리뷰](https://github.com/f-lab-edu/sool-dam-a/pulls?q=is%3Apr+is%3Aclosed )
