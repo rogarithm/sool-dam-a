@@ -1,5 +1,8 @@
 ![Branches](.github/badges/branches.svg)
 
+- 서버는 비용 문제로 인해 더 이상 운영하지 않습니다.
+- 이전에 진행한 PR 리뷰는 [여기](https://github.com/f-lab-edu/sool-dam-a/pulls?q=is%3Apr+is%3Aclosed)서 확인하실 수 있습니다.
+
 # 술담아
 
 술담화 같은 술 구독 서비스
@@ -31,6 +34,3 @@
 
 ## 프로젝트 구조도
 ![sooldama-project-structure3](https://user-images.githubusercontent.com/30012466/205631699-cfca03e8-6750-4821-871a-72c0f68ee88c.png)
-
-## ETC
-[이전에 진행한 PR 리뷰](https://github.com/f-lab-edu/sool-dam-a/pulls?q=is%3Apr+is%3Aclosed )
